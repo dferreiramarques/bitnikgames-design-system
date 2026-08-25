@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>bitnikgames design system</title>
+<meta name="description" content="Tokens e componentes base do design system da bitnikgames — CSS puro, sem dependências, reutilizável e skinnable noutros projetos." />
+<link rel="stylesheet" href="src/index.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  .hero {
+    padding-block: clamp(3rem, 7vw, 5.5rem) clamp(2rem, 5vw, 3.5rem);
+    background: radial-gradient(circle at top right, var(--bg-alt), var(--bg) 60%);
+  }
+
+  .hero-inner {
+    max-width: 720px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.75rem;
+  }
+
+  .install-block {
+    margin-top: 2.5rem;
+    max-width: 620px;
+  }
+
+  .install-block h2 {
+    font-size: 1rem;
+    font-family: var(--font-display);
+    color: var(--text);
+    margin-bottom: 0.6rem;
+  }
+
+  pre.code {
+    background: var(--color-ink);
+    color: var(--color-cream);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    margin: 0 0 0.75rem;
+  }
+
+  .section-alt {
+    background: var(--bg-alt);
+  }
+
+  .swatch-row {
+    display: flex;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .swatch {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-card);
+  }
+
+  .btn-row,
+  .badge-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .badge-row {
+    gap: 0.6rem;
+  }
+
+  .token-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    margin-top: 1rem;
+  }
+
+  .token-table th,
+  .token-table td {
+    text-align: left;
+    padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .token-table th {
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+
+  .token-table code {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 0.82rem;
+  }
+
+  .token-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+    vertical-align: -2px;
+    box-shadow: 0 0 0 1px var(--border);
+  }
+
+  .footer-note {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    padding-block: 2.5rem;
+  }
+
+  .footer-note a {
+    color: var(--brand-primary);
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="eyebrow">Design System</span>
+      <h1>bitnikgames design system</h1>
+      <p style="font-size: 1.1rem; color: var(--text-muted);">
+        Tokens e componentes base extraídos de bitnikgames.vercel.app — CSS puro, sem dependências, para manter consistência visual entre projetos. Muda uma dúzia de variáveis em <code>tokens.css</code> e tens uma skin nova.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="skin-builder/index.html">Abrir Skin Builder</a>
+        <a class="btn btn-outline" href="https://github.com/dferreiramarques/bitnikgames-design-system">Ver no GitHub</a>
+      </div>
+
+      <div class="install-block">
+        <h2>Instalar</h2>
+        <pre class="code">npm install git+https://github.com/dferreiramarques/bitnikgames-design-system.git</pre>
+        <pre class="code">@import "@bitnikgames/design-system/src/index.css";</pre>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
+          Sem npm? Copia a pasta <code>src/</code> para o teu projeto. Ver <a href="README.md" style="color: var(--brand-primary); font-weight: 600;">README</a> para instruções completas, incluindo como carregar as Google Fonts.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Palette &amp; componentes</span>
+        <h2>O que vem no pacote</h2>
+        <p>Tudo o que vês aqui é o CSS real do pacote — nada de mockup.</p>
+      </div>
+
+      <div class="swatch-row">
+        <div class="swatch" style="background: var(--color-brick)"></div>
+        <div class="swatch" style="background: var(--color-orange)"></div>
+        <div class="swatch" style="background: var(--color-yellow)"></div>
+        <div class="swatch" style="background: var(--color-cream); border: 1px solid var(--border)"></div>
+        <div class="swatch" style="background: var(--color-ink)"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary">Botão primário</button>
+        <button class="btn btn-secondary">Botão secundário</button>
+        <button class="btn btn-outline">Botão outline</button>
+      </div>
+
+      <div class="badge-row">
+        <span class="badge badge-accent">Acento</span>
+        <span class="badge badge-primary">Primário</span>
+        <span class="badge badge-secondary">Secundário</span>
+        <span class="badge badge-outline">Outline</span>
+        <span class="badge badge-ink">Ink</span>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="card-media">Cartão de exemplo</div>
+          <div class="card-body">
+            <div class="card-meta"><span>Meta A</span><span>Meta B</span></div>
+            <h3 class="card-title">Título do cartão</h3>
+            <p class="card-excerpt">Uma descrição curta para veres o texto secundário sobre fundo branco.</p>
+            <div class="card-footer">
+              <span class="badge badge-primary">Estado</span>
+              <strong>Preço</strong>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-media">Outro cartão</div>
+          <div class="card-body">
+            <div class="card-meta"><span>Meta A</span><span>Meta B</span></div>
+            <h3 class="card-title">.grid-3 responsivo</h3>
+            <p class="card-excerpt">Colapsa para 2 colunas em tablet e 1 em mobile automaticamente.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-media">Terceiro</div>
+          <div class="card-body">
+            <div class="card-meta"><span>Meta A</span><span>Meta B</span></div>
+            <h3 class="card-title">Sombra e hover</h3>
+            <p class="card-excerpt">Passa o rato — <code>--shadow-card-hover</code> deriva de <code>--shadow-color-rgb</code>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Referência</span>
+        <h2>Tokens principais</h2>
+        <p>Tabela completa no <a href="README.md" style="color: var(--brand-primary); font-weight: 600;">README</a>.</p>
+      </div>
+      <table class="token-table">
+        <thead>
+          <tr><th>Token</th><th>Valor</th><th>Uso</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>--brand-primary</code></td><td><span class="token-swatch" style="background:#b8461f"></span><code>#b8461f</code></td><td>botões primários, links ativos</td></tr>
+          <tr><td><code>--brand-secondary</code></td><td><span class="token-swatch" style="background:#ea7c2e"></span><code>#ea7c2e</code></td><td>gradientes, hover</td></tr>
+          <tr><td><code>--brand-accent</code></td><td><span class="token-swatch" style="background:#e8a93b"></span><code>#e8a93b</code></td><td>acentos, badges</td></tr>
+          <tr><td><code>--bg</code></td><td><span class="token-swatch" style="background:#fbf3e4"></span><code>#fbf3e4</code></td><td>fundo principal</td></tr>
+          <tr><td><code>--text</code></td><td><span class="token-swatch" style="background:#2b1b12"></span><code>#2b1b12</code></td><td>texto principal</td></tr>
+          <tr><td><code>--font-display</code></td><td colspan="2">Baloo 2 — títulos</td></tr>
+          <tr><td><code>--font-body</code></td><td colspan="2">Inter — corpo de texto</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="footer-note">
+    MIT License · Extraído de <a href="https://bitnikgames.vercel.app">bitnikgames.vercel.app</a> ·
+    <a href="https://github.com/dferreiramarques/bitnikgames-design-system">código no GitHub</a>
+  </p>
+</body>
+</html>
