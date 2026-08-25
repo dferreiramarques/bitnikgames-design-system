@@ -1,0 +1,7 @@
+/* bitnikgames design system — entry point.
+   Importa isto (ou os três ficheiros individualmente, pela ordem abaixo,
+   se o teu bundler não seguir @import). */
+
+@import "./tokens.css";
+@import "./base.css";
+@import "./components.css";

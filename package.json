@@ -1,0 +1,24 @@
+{
+  "name": "@bitnikgames/design-system",
+  "version": "0.1.0",
+  "description": "bitnikgames design tokens and base components — reusable CSS design system, skinnable via CSS custom properties.",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.css",
+  "style": "src/index.css",
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dferreiramarques/bitnikgames-design-system.git"
+  },
+  "keywords": [
+    "design-system",
+    "css",
+    "design-tokens",
+    "bitnikgames"
+  ]
+}

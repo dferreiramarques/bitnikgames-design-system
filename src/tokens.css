@@ -1,0 +1,59 @@
+/* ==========================================================================
+   bitnikgames design system — tokens
+   Isto é a única camada que uma "skin" deve tocar. Troca os valores de
+   --color-* e --font-* e o resto do sistema (base.css, components.css)
+   segue automaticamente, porque tudo o resto referencia estas variáveis
+   em vez de valores fixos.
+   ========================================================================== */
+
+:root {
+  /* --- paleta de marca --- */
+  --color-yellow: #e8a93b;
+  --color-yellow-deep: #c4841f;
+  --color-orange: #ea7c2e;
+  --color-orange-deep: #c85f1d;
+  --color-brick: #b8461f;
+  --color-brick-deep: #8f3417;
+
+  /* --- neutros funcionais (contraste e legibilidade) --- */
+  --color-cream: #fbf3e4;
+  --color-cream-soft: #f3e4cb;
+  --color-cream-strong: #ecd6ac;
+  --color-ink: #2b1b12;
+  --color-ink-soft: #5b4636;
+  --color-white: #fffaf1;
+
+  /* --- tokens semânticos (usados por base.css / components.css) --- */
+  --bg: var(--color-cream);
+  --bg-alt: var(--color-cream-soft);
+  --text: var(--color-ink);
+  --text-muted: var(--color-ink-soft);
+  --border: var(--color-cream-strong);
+
+  --brand-primary: var(--color-brick);
+  --brand-primary-hover: var(--color-brick-deep);
+  --brand-secondary: var(--color-orange);
+  --brand-accent: var(--color-yellow);
+
+  /* --- forma --- */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* rgb puro (sem alpha) de --color-ink, para as sombras poderem usar
+     rgba() sem hardcoded — muda --shadow-color-rgb e as sombras seguem
+     a cor de tinta escolhida na skin. */
+  --shadow-color-rgb: 43, 27, 18;
+  --shadow-card: 0 6px 20px -8px rgba(var(--shadow-color-rgb), 0.25);
+  --shadow-card-hover: 0 12px 28px -10px rgba(var(--shadow-color-rgb), 0.32);
+
+  /* --- tipografia ---
+     Carrega os pesos que precisares via Google Fonts (ver README) antes
+     de usar estes tokens — o CSS aqui só define a stack, não o <link>. */
+  --font-display: "Baloo 2", "Fredoka", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* --- layout --- */
+  --container-width: 1120px;
+}
