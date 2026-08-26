@@ -1,0 +1,207 @@
+/* ==========================================================================
+   bitnikgames design system — game UI (camada opcional)
+   Padrões extraídos de jogos reais (o primeiro: Bulbous) — cartas, chips
+   coloridos, modais, tabs, toasts, badge circular. Nem todo o projeto
+   precisa disto (um site de marketing não), por isso não é importado por
+   default em index.css — importa este ficheiro à parte nos projetos que
+   tenham UI de jogo (tabuleiro, cartas, tabuleiro digital).
+
+   Como as cores de marca (--brand-primary/secondary/accent) só dão 3
+   tons, e jogos com peças/equipas/jogadores costumam precisar de mais,
+   este ficheiro define 4 tokens de cor extra (--game-color-1..4) que
+   cada jogo deve sobrescrever com a sua própria paleta — os componentes
+   abaixo (chip, etc.) referenciam-nos genericamente.
+   ========================================================================== */
+
+:root {
+  --game-color-1: var(--brand-primary);
+  --game-color-1-dim: color-mix(in srgb, var(--game-color-1) 18%, var(--bg));
+  --game-color-2: var(--brand-secondary);
+  --game-color-2-dim: color-mix(in srgb, var(--game-color-2) 18%, var(--bg));
+  --game-color-3: var(--brand-accent);
+  --game-color-3-dim: color-mix(in srgb, var(--game-color-3) 18%, var(--bg));
+  --game-color-4: var(--text-muted);
+  --game-color-4-dim: color-mix(in srgb, var(--game-color-4) 18%, var(--bg));
+}
+
+/* --- chip: pill de 3 tons (contorno + fundo diluído + texto na cor) ---
+   Diferente do .badge (bg sólido + texto branco/ink) — o chip é para
+   referenciar uma cor de jogo (equipa, naipe, jogador) de forma legível
+   mesmo em fundos escuros, sem competir visualmente com badges de estado. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--chip-color, var(--brand-primary));
+  background: var(--chip-color-dim, var(--bg-alt));
+  color: var(--chip-color, var(--brand-primary));
+}
+
+.chip-1 {
+  --chip-color: var(--game-color-1);
+  --chip-color-dim: var(--game-color-1-dim);
+}
+.chip-2 {
+  --chip-color: var(--game-color-2);
+  --chip-color-dim: var(--game-color-2-dim);
+}
+.chip-3 {
+  --chip-color: var(--game-color-3);
+  --chip-color-dim: var(--game-color-3-dim);
+}
+.chip-4 {
+  --chip-color: var(--game-color-4);
+  --chip-color-dim: var(--game-color-4-dim);
+}
+
+/* --- game-card: carta/peça com imagem, barra inferior e estados de jogo --- */
+.game-card {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 2px solid var(--border);
+  background: var(--bg-alt);
+  cursor: default;
+  user-select: none;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.game-card.is-clickable {
+  cursor: pointer;
+}
+
+.game-card.is-clickable:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-card-hover);
+  z-index: 10;
+}
+
+.game-card.is-selected {
+  border-color: var(--brand-primary) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-primary) 35%, transparent);
+  transform: translateY(-4px);
+  z-index: 10;
+}
+
+.game-card.is-disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.game-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.game-card-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 0.65rem;
+  padding: 0.25rem 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+/* --- badge circular: numeração/ordem sobreposta a uma peça --- */
+.badge-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--brand-primary);
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  border: 2px solid var(--color-white);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* --- modal / overlay --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 100;
+}
+
+.modal-box {
+  background: var(--color-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  max-width: 480px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* --- tabs --- */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
+.tab {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding: 0.55rem 0.9rem;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.tab.active {
+  color: var(--brand-primary);
+  border-bottom-color: var(--brand-primary);
+}
+
+/* --- toast: notificação transitória, centrada em baixo --- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
+  background: var(--color-ink);
+  color: var(--color-cream);
+  padding: 0.6rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-card-hover);
+  z-index: 200;
+  pointer-events: none;
+}

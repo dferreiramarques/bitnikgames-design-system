@@ -119,6 +119,20 @@
   color: var(--color-white);
 }
 
+/* mais discreto que .btn-outline — borda/texto no --border/--text-muted em
+   vez de --color-ink, para ações secundárias que não devem competir
+   visualmente com o outline principal (ex. "sair", "cancelar") */
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.btn-ghost:hover {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+
 .btn-block {
   width: 100%;
   justify-content: center;

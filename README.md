@@ -76,12 +76,27 @@ Tokens semânticos (`--bg`, `--text`, `--brand-primary`, etc.) apontam para os t
 ## Componentes incluídos
 
 - **Layout**: `.container`, `.section`, `.section-head`, `.eyebrow`, `.grid` / `.grid-3` / `.grid-4` (responsivo)
-- **Botões**: `.btn` + `.btn-primary` / `.btn-secondary` / `.btn-outline` / `.btn-block`
+- **Botões**: `.btn` + `.btn-primary` / `.btn-secondary` / `.btn-outline` / `.btn-ghost` / `.btn-block`
 - **Badges**: `.badge` + `.badge-accent` / `.badge-primary` / `.badge-secondary` / `.badge-outline` / `.badge-ink`
 - **Cartões**: `.card`, `.card-media`, `.card-body`, `.card-meta`, `.card-title`, `.card-excerpt`, `.card-footer`
 - **Páginas de detalhe** (opcional): `.detail-grid`, `.detail-media`, `.back-link`, `.detail-lede`, `.detail-tags`, `.detail-content`
 
 Nota sobre os badges: no site da bitnikgames os nomes são específicos ao domínio (`badge-free`, `badge-paid`, `badge-pwyw`...). Aqui generalizei para nomes semânticos (`badge-accent`, `badge-primary`...) para o pacote fazer sentido fora do contexto de "jogos". Se importares isto de volta para o site da bitnikgames, os nomes não batem certo — usa um mapeamento ou ajusta as classes lá.
+
+## Camada opcional: UI de jogo (`game-ui.css`)
+
+Não é importada por `index.css` — só faz sentido em projetos com UI de jogo (tabuleiro, cartas). Extraída do primeiro jogo integrado no catálogo "jogar online" da bitnikgames ([Bulbous](https://github.com/dferreiramarques/bulbous)).
+
+```css
+@import "@bitnikgames/design-system/src/game-ui.css";
+```
+
+- **`.chip` + `.chip-1..4`** — pill de 3 tons (contorno + fundo diluído + texto na cor), para referenciar cor de equipa/jogador/naipe. Usa os tokens `--game-color-1..4` (por omissão apontam para as 3 cores de marca + `--text-muted`; sobrescreve-os por jogo).
+- **`.game-card`** (+ `.is-clickable` / `.is-selected` / `.is-disabled`) e **`.game-card-bar`** — carta/peça com imagem, hover-lift, anel de seleção, barra inferior de info.
+- **`.badge-circle`** — numeração circular sobreposta a uma peça (ordem de jogo, prioridade).
+- **`.modal-overlay`** + **`.modal-box`** — modal genérico (fundo desfocado + caixa centrada).
+- **`.tabs`** + **`.tab`** (`.active`) — tabs simples, mesmo padrão já usado na Bitnik Box Machine.
+- **`.toast`** — notificação transitória, centrada em baixo.
 
 ## Estrutura
 
@@ -90,10 +105,15 @@ src/
   tokens.css       — cor, tipografia, forma, sombra (a única camada "skinnable")
   base.css          — reset + elementos base (body, headings, links, focus)
   components.css     — layout, botões, badges, cartões
-  index.css          — importa os três, pela ordem certa
+  game-ui.css         — opcional: cartas, chips, modais, tabs, toasts (jogos)
+  index.css          — importa tokens+base+components, pela ordem certa (não inclui game-ui.css)
 skin-builder/
   index.html         — gerador visual de skins (escolhe paleta + Google Fonts, exporta tokens.css)
 ```
+
+## Jogos integrados
+
+- [Bulbous](https://github.com/dferreiramarques/bulbous) — cores próprias (tema escuro, acento lilás `#c084fc`, 4 cores de peça vermelho/azul/verde/amarelo), tipografia/raio/sombra do design system partilhado.
 
 ## Origem
 
