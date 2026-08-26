@@ -116,6 +116,7 @@ skin-builder/
 - [Bulbous](https://github.com/dferreiramarques/bulbous) — cores próprias (tema escuro, acento lilás `#c084fc`, 4 cores de peça vermelho/azul/verde/amarelo), tipografia/raio/sombra do design system partilhado.
 - [Capivaras](https://github.com/dferreiramarques/capivaras) — cores próprias (tema claro e quente, âmbar `#c47c28` + teal `#5bbfb6`), tipografia/raio/sombra do design system partilhado. Primeiro jogo a usar `--shadow-color-rgb` corretamente (sombra tingida ao `--ink` claro da skin, em vez de preto fixo).
 - [Catania](https://github.com/dferreiramarques/catania-v2) — cores próprias (tema antigo/dourado, `#c9a84c` sobre quase-preto `#0d0b08`), tipografia/raio/sombra do design system partilhado. Tem texto desenhado em SVG (o mapa de hexágonos do tabuleiro) — `var(--font-display)` funciona normalmente num atributo `font-family` de SVG, desde que o SVG esteja inserido no documento via `innerHTML` (não um `.svg` externo).
+- [Nine Oils](https://github.com/dferreiramarques/nineoils-v2) — cores próprias (tema 1861/óleo de cobra, dourado `#c49030` sobre madeira escura `#120a02`), tipografia/raio/sombra do design system partilhado. Um popup de detalhe de carta renderiza dentro de um `<iframe>` same-origin para isolamento de CSS (evita que `writing-mode`/outras regras da página principal contaminem o popup) — esse iframe é um documento à parte e não vê os custom properties do documento pai, por isso não referencies `var(--font-display)`/`var(--radius-*)` lá dentro; usa valores literais que sigam a mesma escala.
 
 ## Origem
 
