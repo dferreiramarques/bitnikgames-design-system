@@ -1,6 +1,6 @@
 /* ==========================================================================
    bitnikgames design system — game UI (camada opcional)
-   Padrões extraídos de jogos reais (o primeiro: Bulbous) — cartas, chips
+   Padrões extraídos de jogos reais (Bulbous, Capivaras) — cartas, chips
    coloridos, modais, tabs, toasts, badge circular. Nem todo o projeto
    precisa disto (um site de marketing não), por isso não é importado por
    default em index.css — importa este ficheiro à parte nos projetos que
@@ -11,6 +11,26 @@
    este ficheiro define 4 tokens de cor extra (--game-color-1..4) que
    cada jogo deve sobrescrever com a sua própria paleta — os componentes
    abaixo (chip, etc.) referenciam-nos genericamente.
+
+   Sombras por skin: cada jogo pode ter um --ink muito diferente (Bulbous
+   é escuro, Capivaras é claro e quente) — uma sombra preta plana não
+   serve para os dois. Em vez de escurecer/tingir --shadow-card à mão,
+   define --shadow-color-rgb (o rgb do --ink dessa skin, sem alpha) no
+   :root do jogo ANTES de importar/copiar este ficheiro; --shadow-card e
+   --shadow-card-hover (em tokens.css) já compõem esse rgb, então a
+   sombra segue a tinta certa automaticamente. Ex.: Capivaras tem
+   --ink:#2e1a0a → --shadow-color-rgb: 46, 26, 10.
+
+   Cartas com imagem (.game-card img): não ponhas border-radius na
+   imagem/vídeo lá dentro. Um filho absolute; inset:0 dentro de uma carta
+   com border + overflow:hidden já ocupa uma caixa mais pequena (encolhida
+   pela largura do border) — dar-lhe o MESMO radius do cartão faz esse
+   raio próprio curvar menos apertado nessa caixa menor do que a curva
+   exterior do cartão, deixando uma fresta da cor de fundo do cartão a
+   aparecer mesmo no canto. Deixa o overflow:hidden do pai fazer todo o
+   arredondamento (como já está abaixo); só se REALMENTE precisares de um
+   raio próprio na imagem, usa calc(var(--radius) - <border-width>) para
+   ficar concêntrico. Bug real, apanhado e corrigido no Bulbous.
    ========================================================================== */
 
 :root {

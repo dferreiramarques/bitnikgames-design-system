@@ -1,6 +1,6 @@
 {
   "name": "@bitnikgames/design-system",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "bitnikgames design tokens and base components — reusable CSS design system, skinnable via CSS custom properties.",
   "license": "MIT",
   "type": "module",

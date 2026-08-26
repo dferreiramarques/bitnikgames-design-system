@@ -114,6 +114,7 @@ skin-builder/
 ## Jogos integrados
 
 - [Bulbous](https://github.com/dferreiramarques/bulbous) — cores próprias (tema escuro, acento lilás `#c084fc`, 4 cores de peça vermelho/azul/verde/amarelo), tipografia/raio/sombra do design system partilhado.
+- [Capivaras](https://github.com/dferreiramarques/capivaras) — cores próprias (tema claro e quente, âmbar `#c47c28` + teal `#5bbfb6`), tipografia/raio/sombra do design system partilhado. Primeiro jogo a usar `--shadow-color-rgb` corretamente (sombra tingida ao `--ink` claro da skin, em vez de preto fixo).
 
 ## Origem
 
