@@ -97,9 +97,9 @@ Não é importada por `index.css` — só faz sentido em projetos com UI de jogo
 - **`.modal-overlay`** + **`.modal-box`** — modal genérico (fundo desfocado + caixa centrada).
 - **`.tabs`** + **`.tab`** (`.active`) — tabs simples, mesmo padrão já usado na Bitnik Box Machine.
 - **`.toast`** — notificação transitória, centrada em baixo.
-- **Layout em telemóvel** — `100dvh`, hover só em `(hover: hover)`, alvos de toque ≥ 44px, `.game-row` (fila com scroll que não corta o início), `html.edge .game-header` (safe areas só em ecrã inteiro), `.hand-toggle` (mão colapsável), `.recap-pill` + `.recap-timer` (resumo que fecha sozinho), `.modal-box` como bottom sheet.
+- **Layout em telemóvel** — `100dvh`, hover só em `(hover: hover)`, alvos de toque ≥ 44px, `.game-row` (fila com scroll que não corta o início), `html.edge .game-header` (safe areas só em ecrã inteiro), `.hand-toggle` (mão colapsável), `.recap-pill` + `.recap-timer` (resumo que fecha sozinho), `.modal-box` como bottom sheet, `.hdr-compact` (botões só do telemóvel), `.game-sheet` (painel não modal como bottom sheet).
 
-Layout de jogos e conversão para mobile → [docs/game-layout.md](docs/game-layout.md)
+Layout de jogos e conversão para mobile → [docs/game-layout.md](docs/game-layout.md) (publicado em [design.bitnik.games/docs/game-layout.html](http://design.bitnik.games/docs/game-layout.html)). Para medir um jogo em vários tamanhos de ecrã: [`tools/layout-check.js`](tools/layout-check.js) (secção 8 do guia).
 
 ## Estrutura
 
@@ -112,6 +112,8 @@ src/
   index.css          — importa tokens+base+components, pela ordem certa (não inclui game-ui.css)
 docs/
   game-layout.md     — anatomia do ecrã de jogo em desktop e conversão para telemóvel
+tools/
+  layout-check.js    — mede o layout de um jogo em vários tamanhos (Chrome headless, sem dependências)
 skin-builder/
   index.html         — gerador visual de skins (escolhe paleta + Google Fonts, exporta tokens.css)
 ```
