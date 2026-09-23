@@ -97,6 +97,9 @@ Não é importada por `index.css` — só faz sentido em projetos com UI de jogo
 - **`.modal-overlay`** + **`.modal-box`** — modal genérico (fundo desfocado + caixa centrada).
 - **`.tabs`** + **`.tab`** (`.active`) — tabs simples, mesmo padrão já usado na Bitnik Box Machine.
 - **`.toast`** — notificação transitória, centrada em baixo.
+- **Layout em telemóvel** — `100dvh`, hover só em `(hover: hover)`, alvos de toque ≥ 44px, `.game-row` (fila com scroll que não corta o início), `html.edge .game-header` (safe areas só em ecrã inteiro), `.hand-toggle` (mão colapsável), `.recap-pill` + `.recap-timer` (resumo que fecha sozinho), `.modal-box` como bottom sheet.
+
+Layout de jogos e conversão para mobile → [docs/game-layout.md](docs/game-layout.md)
 
 ## Estrutura
 
@@ -107,6 +110,8 @@ src/
   components.css     — layout, botões, badges, cartões
   game-ui.css         — opcional: cartas, chips, modais, tabs, toasts (jogos)
   index.css          — importa tokens+base+components, pela ordem certa (não inclui game-ui.css)
+docs/
+  game-layout.md     — anatomia do ecrã de jogo em desktop e conversão para telemóvel
 skin-builder/
   index.html         — gerador visual de skins (escolhe paleta + Google Fonts, exporta tokens.css)
 ```

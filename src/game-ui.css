@@ -98,10 +98,14 @@
   cursor: pointer;
 }
 
-.game-card.is-clickable:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-card-hover);
-  z-index: 10;
+/* Só em quem faz hover mesmo: num ecrã tátil o :hover fica "preso" depois
+   do toque (carta levantada até se tocar noutro sítio). Ver docs/game-layout.md. */
+@media (hover: hover) {
+  .game-card.is-clickable:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-card-hover);
+    z-index: 10;
+  }
 }
 
 .game-card.is-selected {
@@ -224,4 +228,209 @@
   box-shadow: var(--shadow-card-hover);
   z-index: 200;
   pointer-events: none;
+}
+
+/* ==========================================================================
+   Layout de jogo em telemóvel — partes genéricas
+   Extraídas da conversão do Bulbous para telemóvel. Aqui fica só o que não
+   depende da estrutura de cada jogo; a receita completa (grelha do ecrã de
+   jogo, fórmula de tamanho das peças da mesa, painéis de adversário, modo
+   compacto) está em docs/game-layout.md.
+
+   Critério "compacto" usado abaixo (igual no CSS e no JS de cada jogo):
+     (max-width: 640px), (orientation: landscape) and (max-height: 500px)
+   ========================================================================== */
+
+/* --- altura real e toque ---
+   dvh = altura visível de facto (sem a barra de endereço do browser móvel);
+   100% fica como fallback. overscroll-behavior evita o pull-to-refresh a
+   meio de uma jogada; touch-action tira o atraso/zoom de duplo toque. */
+html,
+body {
+  height: 100%;
+}
+@supports (height: 100dvh) {
+  html,
+  body {
+    height: 100dvh;
+  }
+}
+body {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+button {
+  touch-action: manipulation;
+}
+
+/* --- alvos de toque >= 44px (recomendação iOS/Android) --- */
+@media (pointer: coarse) {
+  .btn,
+  .tab,
+  .hand-toggle,
+  .recap-pill {
+    min-height: 44px;
+  }
+}
+
+/* --- fila com scroll horizontal: centrar com margens automáticas ---
+   Nunca justify-content:center numa fila com overflow-x: quando o conteúdo
+   é mais largo do que a fila, transborda para os DOIS lados e o início
+   (1.º adversário, 1.ª carta) fica inalcançável pelo scroll. As margens
+   auto centram quando cabe e encostam à esquerda quando não cabe.
+   Usa .game-row, ou copia as duas regras :first-child/:last-child para as
+   filas que já tens. */
+.game-row {
+  display: flex;
+  gap: 0.45rem;
+  overflow-x: auto;
+}
+.game-row > :first-child {
+  margin-left: auto;
+}
+.game-row > :last-child {
+  margin-right: auto;
+}
+
+/* --- html.edge: margens de notch / barra de estado só em ecrã inteiro ---
+   A classe é posta por JS (syncEdge, ver docs) quando a página ocupa o
+   ecrã todo — app instalada (PWA) ou requestFullscreen. No browser normal
+   é o browser que reserva essas zonas; aplicar env(safe-area-inset-*) aí
+   cria faixas vazias (visto em Android). Põe .game-header no cabeçalho do
+   ecrã de jogo, ou copia a regra para o teu seletor. */
+html.edge .game-header {
+  padding-top: max(4px, env(safe-area-inset-top));
+  padding-left: max(10px, env(safe-area-inset-left));
+  padding-right: max(10px, env(safe-area-inset-right));
+}
+
+/* --- mão colapsável: botão "+N outras" / "− recolher" ---
+   Tracejado, do tamanho de uma carta (--card-h do jogo; sem ele estica à
+   altura da fila). Conteúdo: <b>+3</b><small>outras</small>. .wide para o
+   caso "Nenhuma carta jogável · Ver mão (7)". */
+.hand-toggle {
+  width: 52px;
+  height: var(--card-h, auto);
+  align-self: stretch;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  border: 2px dashed var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.1;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+.hand-toggle b {
+  font-size: 1.15rem;
+}
+.hand-toggle small {
+  font-size: 0.62rem;
+  font-weight: 600;
+  font-family: var(--font-body);
+}
+.hand-toggle.wide {
+  width: auto;
+  padding: 0 14px;
+}
+.hand-toggle:active {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+@media (hover: hover) {
+  .hand-toggle:hover {
+    border-color: var(--brand-primary);
+    color: var(--brand-primary);
+  }
+}
+
+/* --- resumo automático (substitui um botão "Continuar") ---
+   <button class="recap-pill">🏆 X ganhou a vaza<span class="recap-timer"
+   style="animation-duration:3000ms"></span></button>
+   A barra esvazia-se e o JS fecha o resumo ao fim do mesmo tempo; tocar
+   salta. A cor da barra segue a do texto (currentColor), por isso basta
+   pôr color: <cor do vencedor> no botão. Não reconstruir o elemento a
+   cada re-render, senão a animação recomeça (ver docs). */
+.recap-pill {
+  position: relative;
+  overflow: hidden;
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.recap-timer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: currentColor;
+  transform-origin: left;
+  animation: recapDrain linear forwards;
+}
+@keyframes recapDrain {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* --- modais em telemóvel ---
+   Vertical estreito: o .modal-box vira uma bottom sheet (encostada em
+   baixo, na zona do polegar, cantos de cima arredondados). Horizontal
+   baixo: menos moldura e quase o ecrã todo de altura, para um fim de jogo
+   com tabela caber em ~300px sem scroll. */
+@media (max-width: 640px) {
+  .modal-overlay {
+    justify-content: flex-end;
+    align-items: stretch;
+    flex-direction: column;
+    padding: 0;
+  }
+  .modal-box {
+    max-width: 100%;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+    max-height: 88vh;
+    max-height: 88dvh;
+    animation: sheetUp 0.25s ease;
+  }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .modal-overlay {
+    padding: 6px;
+  }
+  .modal-box {
+    padding: 10px 18px;
+    max-height: calc(100vh - 12px);
+    max-height: calc(100dvh - 12px);
+  }
+}
+@keyframes sheetUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
