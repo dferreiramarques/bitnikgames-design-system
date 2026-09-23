@@ -232,10 +232,10 @@
 
 /* ==========================================================================
    Layout de jogo em telemóvel — partes genéricas
-   Extraídas da conversão do Bulbous para telemóvel. Aqui fica só o que não
-   depende da estrutura de cada jogo; a receita completa (grelha do ecrã de
-   jogo, fórmula de tamanho das peças da mesa, painéis de adversário, modo
-   compacto) está em docs/game-layout.md.
+   Extraídas da conversão do Bulbous e do Capivaras para telemóvel. Aqui
+   fica só o que não depende da estrutura de cada jogo; a receita completa
+   (grelha do ecrã de jogo, fórmula de tamanho das peças da mesa, painéis de
+   adversário, modo compacto, balão do tutorial) está em docs/game-layout.md.
 
    Critério "compacto" usado abaixo (igual no CSS e no JS de cada jogo):
      (max-width: 640px), (orientation: landscape) and (max-height: 500px)
@@ -302,6 +302,24 @@ html.edge .game-header {
   padding-top: max(4px, env(safe-area-inset-top));
   padding-left: max(10px, env(safe-area-inset-left));
   padding-right: max(10px, env(safe-area-inset-right));
+}
+
+/* --- botões só do compacto (⛶ ecrã inteiro, 📖 regras…) ---
+   Escondidos fora do compacto, visíveis dentro. A 2.ª regra não é
+   redundante: o display do autor ganha ao [hidden] do browser, e o JS
+   esconde o ⛶ com hidden onde não há requestFullscreen (iPhone, PWA). */
+.hdr-compact {
+  display: none;
+}
+@media (max-width: 640px), (orientation: landscape) and (max-height: 500px) {
+  .hdr-compact {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hdr-compact[hidden] {
+    display: none;
+  }
 }
 
 /* --- mão colapsável: botão "+N outras" / "− recolher" ---
@@ -424,6 +442,40 @@ html.edge .game-header {
     padding: 10px 18px;
     max-height: calc(100vh - 12px);
     max-height: calc(100dvh - 12px);
+  }
+}
+
+/* --- painel não modal como bottom sheet (regras, histórico…) ---
+   Em desktop o painel fica onde está e .game-sheet não faz nada. No
+   compacto sai do fluxo e só aparece com .open (posta pela mesma função
+   que abre/fecha o painel em desktop), como bottom sheet. O fundo
+   escurecido é a sombra de 100vmax — não precisa de elemento à parte.
+   Fica abaixo dos modais (z-index 100), que podem abrir por cima.
+   Se o painel tem um cabeçalho que deve ficar à vista, põe o scroll no
+   corpo (overflow-y: auto nele) em vez do painel. */
+@media (max-width: 640px), (orientation: landscape) and (max-height: 500px) {
+  .game-sheet {
+    display: none;
+  }
+  .game-sheet.open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    max-width: 640px;
+    margin: 0 auto;
+    max-height: 88vh;
+    max-height: 88dvh;
+    overflow-y: auto;
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--color-white);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-bottom: 0;
+    box-shadow: 0 0 0 100vmax rgba(var(--shadow-color-rgb), 0.55);
+    animation: sheetUp 0.25s ease;
   }
 }
 @keyframes sheetUp {
