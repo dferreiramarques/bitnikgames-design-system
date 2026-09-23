@@ -6,6 +6,7 @@ Está escrito em termos genéricos (**mesa**, **peças ativas**, **mão**, **adv
 
 - [Bulbous](https://github.com/dferreiramarques/bulbous) (ficheiro único `client.html`; commits `953d526`, `81e8169`, `02f1532`) — a primeira; jogo de vazas com mão, barra de ações e adversários à parte (`#centre-area`, `#my-area`…).
 - [Capivaras](https://github.com/dferreiramarques/capivaras) (`server.js`, cliente na string `CLIENT_HTML`, secções "LAYOUT DE JOGO EM TELEMÓVEL", "COMPACTO" e "TELEMÓVEL NA HORIZONTAL") — a segunda; sem mão nem barra de ações, 2 a 6 jogadores, o ecrã de jogo era uma página com scroll (ver [variantes](#variantes-de-estrutura) e [diagnóstico](#2-diagnóstico-que-motivou-a-conversão)).
+- [Catania](https://github.com/dferreiramarques/catania-v2) (`public/index.html`, as mesmas três secções no CSS; configuração do harness em `tools/layout-check.config.mjs`) — a terceira; tabuleiro de hexágonos em SVG, barra lateral fixa em desktop (pilhas, torre, registo, ações), mãos dos adversários públicas, tutorial com bots (ver [barra lateral](#barra-lateral-repartida-display-contents)).
 
 Isto é **só estrutura e comportamento**. As cores de cada jogo são a skin dele (ver `README.md` → "Fazer uma skin"); não há tokens novos aqui.
 
@@ -82,6 +83,8 @@ Nem todos os jogos têm as cinco zonas. A mais comum é esta:
 
 Como não há mão a disputar altura, a mesa fica com quase todo o ecrã — e é exatamente por isso que o tamanho das peças tem de vir do espaço real (secção 4) e que o balão do tutorial precisa dos passos extra de 6.4.
 
+**Barra lateral fixa em desktop.** Em vez de uma só coluna, o ecrã de jogo é uma linha: à esquerda a coluna do jogo (cabeçalho, jogadores, adversários, mesa, a minha área) e à direita uma barra de altura total com informação de apoio e as ações (no Catania: pilhas de recursos, torre de discos, registo, ações). Em desktop é bom — a mesa fica com a altura toda. No telemóvel a barra não cabe ao lado e, empilhada por baixo, empurra a mesa para fora do ecrã. A receita é repartir a barra pelo layout do telemóvel sem mexer no HTML ([secção 4](#barra-lateral-repartida-display-contents)): valores numa faixa, ações numa barra, registo em bottom sheet.
+
 ### Regra de estabilidade
 
 **Nada que mude de estado pode mudar de altura.** Se uma peça "ativa" ganha um `border` mais grosso, ou uma linha de indicadores só aparece às vezes, a mesa salta para cima e para baixo a cada jogada.
@@ -109,6 +112,14 @@ Como não há mão a disputar altura, a mesa fica com quase todo o ecrã — e �
 - **Tamanho das peças por orçamento fixo**, p.ex. `calc((100vh - 610px) * 5 / 7)` ("a altura do ecrã menos o que as outras zonas ocupam"). Abaixo de ~650px de altura o orçamento dá negativo e as peças ficavam com **4px de largura**. Qualquer número mágico que desconta alturas de outras zonas parte assim; a solução é medir a célula da mesa (container queries, secção 4).
 - **Painéis de regras em acordeão dentro do ecrã de jogo**, no fundo da página. Numa coluna de altura fixa não há "fundo da página": no compacto passam a bottom sheet aberta por um botão 📖 no cabeçalho (receita em 6.3).
 - Com 6 jogadores, uma fila de painéis de jogador ficava com painéis de 58px, ilegíveis.
+
+### Catania (sintomas novos)
+
+- **O ecrã de jogo fazia scroll por dentro.** Um `@media (max-width: 800px)` punha `overflow-y: auto` no próprio ecrã de jogo e a barra lateral por baixo. O documento não faz scroll, por isso `scrollHeight − innerHeight` dava 0 — e a 390×844 o ecrã escondia 876–1363px. Mede o scroll do ecrã, não só do documento (secção 8).
+- **Na horizontal a mesa ficava com 0px** de altura (o mesmo do Bulbous).
+- **Em desktop, a faixa de adversários crescia de 77 para 153px** quando as mãos cresciam (uma miniatura por carta, a partir linha) e quando aparecia a primeira aldeia (uma linha que só existia a partir daí); a mesa encolhia o mesmo. A regra de estabilidade da secção 1 também vale em desktop.
+- **Página invisível até as fontes carregarem** (`visibility: hidden` até `document.fonts.ready`, sem limite de tempo): numa rede lenta, ecrã em branco (secção 7).
+- **O servidor estático servia ficheiros fora de `public/`**: `GET /../server.js` devolvia o código do servidor (secção 7).
 
 **Mede a largura das peças, não só se estão visíveis.** No Capivaras as cartas estavam todas "dentro do ecrã" — com 4px. Um teste que só verifica `left ≥ 0` e `bottom ≤ innerHeight` dá tudo verde (ver as medidas na secção 8).
 
@@ -286,6 +297,15 @@ A secção de telemóvel do `game-ui.css` usa os tokens do design system (`--bra
 
 Não há fallbacks no `game-ui.css` do tipo `var(--brand-primary, var(--accent))`: `--accent` seria um nome inventado, que não existe em nenhum dos dois lados, e esconderia o esquecimento em vez de o mostrar.
 
+### 3.11 Estilos inline anulam o layout do compacto
+
+Um `style="…"` no HTML ou um `el.style.x = …` no JS ganha a qualquer regra de um `@media`. Dois casos no Catania:
+
+- O render dos adversários fazia `c.style.display = 'flex'` para voltar a mostrar a faixa. No compacto a faixa é uma grelha, e ficava flex (os painéis partiam em 2 linhas). Para voltar a mostrar algo escondido, repõe o valor do CSS: `el.style.display = ''`.
+- Os botões do cabeçalho tinham `style="font-size: …; padding: …"`. Para o compacto os poder mudar (só ícone, 34px), os mesmos valores passam para uma classe — o desktop fica igual.
+
+Antes de converter, procura `style=` e `.style.` nas zonas do ecrã de jogo.
+
 ---
 
 ## 4. Modo compacto (telemóvel) — um só critério em CSS e JS
@@ -439,6 +459,56 @@ Números do Capivaras a 390×844 com 6 cartas: numa fila, **52px** de largura; c
              white-space: nowrap; overflow: hidden; }
 ```
 
+### Mesa em SVG (tabuleiro)
+
+Se a mesa é um SVG com `viewBox` e `preserveAspectRatio="xMidYMid meet"` (o mapa de hexágonos do Catania), não é precisa a fórmula `--cw`: com `width: 100%; height: 100%` na célula, o SVG já fica com o maior tamanho que cabe. Dois ajustes:
+
+- **A margem do `viewBox`.** A margem à volta do desenho (no Catania, `R + 14` de cada lado, ~24% da largura) é espaço perdido no telemóvel. Decide-a no JS com `isCompact()` — `pad = isCompact() ? 18 : R + 14` — e o desktop fica igual. Os hexágonos passaram de 59 para 79px a 390×844.
+- **Mede o desenho, não a célula**: a largura de um hexágono (`svg g[onclick]`) é o alvo de toque (≥ 44px); a célula é quase sempre maior do que o que está desenhado.
+
+### Mãos e coleções: uma peça por tipo, com o número
+
+Uma miniatura por carta faz a faixa crescer com a mão e partir linha. Quando as cartas de um tipo são iguais (recursos, cores), desenha **uma por tipo, sempre todas** — as que têm 0 esbatidas — com o número. A largura e a altura ficam fixas e a faixa não mexe entre jogadas; por isso no Catania ficou também em desktop (era o que fazia a mesa saltar 77px).
+
+O mesmo para coleções com um máximo conhecido: 3 aldeias → 3 lugares sempre visíveis, os vazios tracejados.
+
+```js
+RES.forEach(r => {
+  const n = hand[r] || 0;
+  row.insertAdjacentHTML('beforeend',
+    `<div class="mini-card c-${r}${n ? '' : ' zero'}" title="${n} ${RNAME[r]}">${ICON[r]}<span class="mct">${n}</span></div>`);
+});
+```
+
+```css
+.mini-card.zero { opacity: .22; }
+```
+
+### Barra lateral repartida (display: contents)
+
+Para a barra lateral fixa (secção 1): no compacto, a coluna do jogo e a barra deixam de ser caixas (`display: contents`) e as zonas das duas entram numa só grelha. Cada uma vai para onde faz sentido no telemóvel, sem mexer no HTML:
+
+```css
+/* dentro do @media COMPACTO — exemplo do Catania */
+#s-game.active {
+  display: grid; overflow: hidden;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto auto auto;
+  grid-template-areas: "top top" "players players" "opps opps" "board board" "piles tower" "my my" "actions actions";
+}
+.game-left, .gside { display: contents; }
+.gboard    { grid-area: board; min-height: 0; }
+.piles-sec { grid-area: piles; }   /* secções da barra: dá-lhes uma classe para as pôr na grelha */
+.tower-sec { grid-area: tower; }
+.apanel    { grid-area: actions; }
+.game-sheet { display: none; }     /* o registo passa a bottom sheet (6.3) */
+```
+
+- **Informação de apoio** (pilhas, torre) → uma **faixa de valores** numa linha: ícone + valor, sem nomes nem contadores (o `title` mantém-nos).
+- **Ações** → uma barra numa linha, com rótulos curtos decididos no JS ("Recolher 1", "🏛 Fundar").
+- **Registo, histórico** → bottom sheet aberta por um botão do cabeçalho (6.3).
+- Uma zona da barra **sem `grid-area`** entra na grelha como uma linha a mais, por baixo de tudo: esconde-a ou dá-lhe uma área.
+
 ### A minha área
 
 - **As minhas peças**: faixa de miniaturas (as mesmas dos adversários), exceto na fase em que tenho de escolher uma — aí voltam as cartas grandes. Decidido em JS com `isCompact()`.
@@ -548,6 +618,27 @@ Com 6 linhas de resultado, cada píxel de altura conta:
 - nome e detalhe (a contagem de peças, bónus) **na mesma linha**, com `flex-wrap` para voltar a partir se não couber: `display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px`;
 - linhas com `padding: 2px 0`;
 - título a `1.15rem`, botões a `min-height: 38px`.
+
+### Barra lateral repartida na horizontal: 3 colunas
+
+No Catania a mesa fica à esquerda, em toda a altura, e à direita ficam os adversários, os valores, a minha área e as ações. A faixa de valores tem duas células (pilhas e torre), por isso a coluna da direita são duas colunas da grelha — e `calc()` com percentagem funciona num track:
+
+```css
+grid-template-columns: minmax(0, 1fr) calc(max(300px, 44%) - 76px) 76px;
+grid-template-rows: auto 30px auto auto minmax(0, 1fr) auto;
+grid-template-areas:
+  "top top top"
+  "players opps opps"
+  "board opps opps"
+  "board piles tower"
+  "board my my"
+  "board actions actions";
+```
+
+- **Jogadores numa linha por cima da mesa**, à esquerda, para a coluna da direita caber a 900×300. A linha tem altura fixa (`30px`): com `auto`, os adversários (que ocupam essa linha e a seguinte) podiam fazê-la crescer e roubar altura à mesa.
+- **A minha área com `flex-wrap`** e a mão com `flex: 1 1 190px`: a 667×375 a coluna é estreita e a mão passa para baixo das aldeias (há altura de sobra); a 900×300 ficam lado a lado. Depende só da largura, não do estado, por isso não quebra a regra de estabilidade.
+
+Referência: a 844×390 a mesa fica com 321px de altura e hexágonos de 95px; a 900×300, 231px e 70px.
 
 ---
 
@@ -673,7 +764,17 @@ Um painel que em desktop está sempre no ecrã de jogo (regras em acordeão, his
 
 - a **mesma função** que abre/fecha o acordeão em desktop põe `.open` no painel — em desktop a classe não faz nada, e os dois modos nunca ficam dessincronizados;
 - o fundo escurecido é uma sombra de `100vmax` no próprio painel — não precisa de um elemento de fundo à parte;
-- se o painel tem um cabeçalho que deve ficar sempre visível (o botão de fechar do acordeão), o scroll vai para o corpo em vez do painel.
+- se o painel tem um cabeçalho que deve ficar sempre visível (o botão de fechar do acordeão), o scroll vai para o corpo em vez do painel;
+- se o painel não tinha botão de fechar (o registo do Catania estava sempre à vista), acrescenta um com `.hdr-compact` — invisível em desktop;
+- **tocar fora fecha**: a sombra de `100vmax` não recebe cliques, por isso é um `click` no documento (a excluir o botão que abre);
+- ao sair do compacto (rodar um tablet, alargar a janela), fecha-o no `change` do `COMPACT_MQ`.
+
+```js
+document.addEventListener('click', e => {
+  if (sheet.classList.contains('open') && !sheet.contains(e.target) && !e.target.closest('#btn-log'))
+    sheet.classList.remove('open');
+});
+```
 
 ```js
 function toggleRules() {
@@ -728,7 +829,7 @@ O balão em si: `width: min(420px, calc(100vw - 24px)); max-height: calc(100dvh 
 Num jogo sem mão (secção 1, variantes) a mesa fica com quase todo o ecrã, e os passos 1–4 não chegam: não sobra altura nem por baixo nem por cima, nem largura ao lado com o balão na largura normal, e o passo 4 acaba a tapar o alvo. Entre o passo 3 e o 4, tenta, por esta ordem:
 
 - **a) ao lado dos alvos, mais estreito** — largura = o espaço livre ao lado, se for ≥ 240px (se o teu passo 3 já ajusta a largura ao espaço, como o snippet acima, é o mesmo);
-- **b) com vários alvos: por baixo/por cima de UM deles**, com a largura desse alvo menos ~20px. Os alvos vizinhos (p.ex. cartas lado a lado) tocam-se por causa do padding do spotlight; com a largura toda do balão, ao ficar por baixo de um, tapava o do lado;
+- **b) com vários alvos: por baixo/por cima de UM deles**, na **faixa livre** à volta dele: a largura vai do alvo mais próximo à esquerda até ao mais próximo à direita, contando só os alvos que se cruzam na vertical com essa faixa (≥ 240px). Se não couber em altura, encurta-o como em c). A primeira versão (Capivaras) usava a largura do próprio alvo menos ~20px, porque os alvos vizinhos se tocam por causa do padding do spotlight; a faixa livre resolve o mesmo e é mais geral — no Catania, o alvo é o painel pequeno de um bot ao lado da mesa, e o balão fica por baixo do painel, mais largo do que ele, até à margem da mesa;
 - **c) no lado com mais espaço, mais baixo**: `max-height` = esse espaço, com scroll interno, e a barra de botões com `position: sticky; bottom: 0` para "Seguinte" ficar sempre visível.
 
 Só depois disto o passo 4 — e, com vários alvos, melhor do que "o lado com mais espaço" é a posição que tapa menos área dos alvos.
@@ -763,14 +864,42 @@ if (!hit) {                                           // c) mais baixo, com scro
 }
 ```
 
+A versão do Catania do passo b), com a faixa livre (`rects` = alvos com `x, y, r, b`; `M` = margem; `GAP` = distância ao alvo):
+
+```js
+const free = (r, y0, y1) => {              // faixa livre à volta do centro de r, entre y0 e y1
+  const c = (r.x + r.r) / 2; let a = M, z = vw - M;
+  rects.forEach(o => {
+    if (o === r || o.b <= y0 || o.y >= y1) return;          // não se cruza com a faixa
+    if (o.r <= c) a = Math.max(a, o.r + GAP); else if (o.x >= c) z = Math.min(z, o.x - GAP); else z = a;
+  });
+  return [a, z];
+};
+rects.forEach(r => {
+  const fb = free(r, r.b + GAP, vh - M), fa = free(r, M, r.y - GAP);
+  if (fb[1] - fb[0] >= 240) tries.push([fb[1] - fb[0], () => [r.b + GAP, inBand(r, fb)], vh - M - r.b - GAP]);
+  if (fa[1] - fa[0] >= 240) tries.push([fa[1] - fa[0], () => [r.y - GAP - ch, inBand(r, fa)], r.y - GAP - M]);
+});
+for (const [w, pos, room] of tries) {       // room = altura disponível; se não couber, scroll interno
+  box.style.width = Math.min(w, maxW) + 'px'; box.style.maxHeight = '';
+  cw = box.offsetWidth; ch = box.offsetHeight;
+  if (ch > room && room >= 120) { box.style.maxHeight = Math.floor(room) + 'px'; ch = box.offsetHeight; }
+  const p = pos(); if (ok(p[0], p[1])) { hit = p; break; }
+}
+```
+
 ```css
 .tut-actions { position: sticky; bottom: 0; background: var(--color-white); }   /* a cor de fundo do balão */
 ```
 
-Duas armadilhas:
+Com a barra de botões sticky, o passo c) pode aceitar menos altura (o Catania usa 120px em vez de 180): o texto faz scroll, mas "Seguinte" está sempre à vista.
+
+Armadilhas:
 
 - **Arredondamento.** O espaço calculado a partir de `getBoundingClientRect()` é fracionário (p.ex. 213,6px); `offsetHeight` é inteiro e arredonda para cima (214). Sem `Math.floor` no `max-height`, o teste "cabe?" falha por 0,4px e o passo c) nunca acontece.
 - **Largura que fica de uma vez para a outra.** O posicionamento corre de novo a cada 250ms (os alvos mexem-se com animações e re-renders). Repõe `style.width = ''` e `style.maxHeight = ''` **no início de cada posicionamento**, e volta a medir `offsetWidth`/`offsetHeight` depois de cada tentativa — senão o balão fica preso na largura estreita de um passo anterior.
+- **Margem no teste "cabe?".** No telemóvel o balão tem `100vw - 24px` de largura — mais do que `vw - 2 × 16px`. Se o teste exigir a mesma margem de 16px na horizontal, nenhum passo de recurso passa, nunca, e o balão acaba sempre no passo 4 a tapar o alvo. Na horizontal basta caber no ecrã (`l >= 0 && l + cw <= vw`); a margem fica para o encostar no fim. No Catania era este o motivo de 10 passos falharem a 360×600, e parecia um problema de layout.
+- **Alvos que sobem com animação.** Um modal em bottom sheet sobe em `.25s` (`sheetUp`): o posicionamento que corre ao abrir mede o alvo ainda em baixo, e só o tick seguinte corrige. Reposiciona no fim da animação: `document.addEventListener('animationend', e => { if (tutActive && e.animationName === 'sheetUp') place(); })`.
 
 #### Ajustar o layout só enquanto o tutorial está ativo
 
@@ -798,6 +927,23 @@ body:has(.tut-coach.active) .table-cards .card  { width: var(--cw1); }
 ```
 
 A margem `--tut-gutter` entra na fórmula de `--cw1` (secção 4) a subtrair à largura — `calc((100cqw - 20px - var(--tut-gutter, 0px) - …) / n)` — com `0px` por omissão, para fora do tutorial não mudar nada.
+
+**Com uma mesa em SVG** (Catania), a mesma ideia faz-se de outra forma:
+
+- **O alvo é o desenho, não a célula.** No telemóvel a célula da mesa é quase o ecrã todo, mas o desenho (com `meet`) ocupa menos. Um alvo "virtual" com o retângulo do desenho — `getBBox()` convertido para o ecrã com `getScreenCTM()` — deixa espaço para o balão. Em desktop continua a ser a célula.
+- **Encostar o desenho ao topo** só no tutorial: `preserveAspectRatio="xMidYMin meet"` em vez de `xMidYMid` (decidido no JS ao desenhar), e a célula com `align-items: flex-start`.
+- **Altura máxima** só no tutorial e na vertical: `body.tut-on #bwrap { max-height: calc(100dvh - 420px) }` — a 600px de altura a mesa fica com 180px e o balão cabe por baixo; a 844px não muda nada.
+- **Modais e ecrã final ao lado do balão** na horizontal (como os modais acima): o modal de fundar e o quadro de vitória encostam à esquerda com `max-width: min(420px, 55vw)`. Na vertical, o modal fica mais baixo (`max-height: calc(100dvh - 270px)`) e o balão vai por cima dele.
+
+```js
+function tutBoard() {                          // alvo "ilha": no compacto, só a área desenhada
+  const cell = document.querySelector('.gboard'), svg = cell.querySelector('svg');
+  if (!isCompact() || !svg) return cell;
+  const bb = svg.getBBox(), m = svg.getScreenCTM();
+  const rect = new DOMRect(m.e + bb.x * m.a, m.f + bb.y * m.d, bb.width * m.a, bb.height * m.d);
+  return { getClientRects: () => [rect], getBoundingClientRect: () => rect, scrollIntoView() {} };
+}
+```
 
 #### Passos cujo alvo muda entre desktop e telemóvel
 
@@ -846,6 +992,77 @@ E o áudio, p.ex. com `ffmpeg`:
 ffmpeg -i art/audio-original/ambient.mp3 -b:a 96k public/ambient.mp3
 ```
 
+### Quando quase não há imagens (Catania)
+
+O Catania tem 196KB de assets, todos SVG — o peso está noutro lado:
+
+- **Comprime o HTML.** Um cliente num só ficheiro com CSS e SVG embutidos tem 150–180KB; com gzip, 43–51KB. Num servidor Node sem dependências faz-se com `zlib` (já vem com o Node), guardando o resultado em memória por ficheiro e data de modificação:
+
+  ```js
+  const zlib = require('zlib');
+  const GZIP_TYPES = new Set(['.html', '.js', '.css', '.json', '.svg']);
+  const gzCache = new Map();
+  function gzipped(file, data, mtime) {
+    const hit = gzCache.get(file);
+    if (hit && hit.mtime === mtime) return hit.buf;
+    const buf = zlib.gzipSync(data, { level: 9 });
+    gzCache.set(file, { mtime, buf });
+    return buf;
+  }
+  // ao servir: headers.Vary = 'Accept-Encoding';
+  // se /gzip/.test(req.headers['accept-encoding']) → Content-Encoding: gzip + gzipped(file, data, stat.mtimeMs)
+  ```
+
+- **Fontes: pede só os pesos que usas.** Procura `font-weight` no CSS (e no JS que escreve estilos). Cuidado com pesos que parecem não usados mas servem de base a um sintetizado: um `font-weight: 900` num título usa o 800 se o 800 existir.
+- **Nunca deixes a página em branco à espera das fontes.** Se o jogo esconde a página até `document.fonts.ready` (para evitar o salto de fonte), põe um limite: `setTimeout(reveal, 1500)` ao lado do `fonts.ready.then(reveal)`.
+- **Tipos MIME.** Um servidor com uma tabela de extensões feita à mão costuma não ter `.svg` (`image/svg+xml`) nem `.webmanifest`/`.json` — um SVG servido como `application/octet-stream` não aparece num `<img>`.
+- **Ficheiros que ninguém usa.** O Catania tinha `public/icons/*.svg` que nenhum ficheiro referenciava (os ícones estavam embutidos no HTML). Procura cada ficheiro servido no código antes de otimizar o que talvez nem seja pedido.
+
+### App instalável: manifest e ícone
+
+No iPhone não há `requestFullscreen` (3.4): a única forma de jogar sem a barra do browser é instalar. Precisa de:
+
+```html
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon-180.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+```
+
+```json
+{
+  "name": "Catania", "short_name": "Catania", "lang": "pt",
+  "start_url": "/", "scope": "/", "display": "standalone",
+  "background_color": "#0d0b08", "theme_color": "#0d0b08",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
+```
+
+- **Ícone "maskable"**: o Android corta-o em círculo ou num quadrado arredondado — o desenho fica nos 80% do centro, com o fundo a encher o resto.
+- **PNG a partir do SVG sem ferramentas extra**: o Chrome headless tira a captura — `chrome --headless=new --window-size=512,512 --screenshot=icon-512.png icone.html` (um HTML com o SVG num `<img>` de 512px). Repete para 192 e 180.
+- **Confirma a licença dos ícones antes de fazer um ícone da app a partir deles.** Os ícones do Catania são OpenMoji (reconhecem-se pelo `viewBox="0 0 72 72"` e pelos grupos `color`/`line`/`skin`), licença CC BY-SA 4.0: pedem crédito, e as versões alteradas têm de ter a mesma licença. O crédito foi para o README do jogo, e o ícone da app é um desenho original.
+
+### Servidor estático: só ficheiros da pasta pública
+
+`fs.readFile(path.join(PUB_DIR, req.url))` segue `../` — e no Windows também `..\`. No Catania, `GET /../server.js` devolvia o código do servidor; da mesma forma, qualquer ficheiro que o processo pudesse ler. Confirma que o caminho final ainda está dentro da pasta:
+
+```js
+const file = path.join(PUB_DIR, url);
+if (!file.startsWith(PUB_DIR + path.sep)) { res.writeHead(403); res.end('Forbidden'); return; }
+```
+
+Testa com `curl --path-as-is` (sem a opção, o curl normaliza o `..` antes de enviar):
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" --path-as-is http://localhost:3000/../server.js
+```
+
 ---
 
 ## 8. Checklist de testes (antes de dar por feito)
@@ -864,7 +1081,8 @@ Em cada um:
 - [ ] sobreposições (sobretudo o fim de jogo com equipas / com o máximo de jogadores) sem scroll interno;
 - [ ] balão do tutorial sem sobrepor os anéis do spotlight, em todos os passos;
 - [ ] alturas de cada zona (cabeçalho, jogadores, estado, a minha área) iguais entre estados — a regra de estabilidade verificada, não só lida;
-- [ ] desktop igual ao de antes, **com diferença de píxeis** (ver abaixo).
+- [ ] desktop igual ao de antes, **com diferença de píxeis** (ver abaixo);
+- [ ] o servidor estático não serve ficheiros fora da pasta pública (`/../server.js` → 403; secção 7).
 
 **Num telemóvel real:** ecrã inteiro ao entrar numa mesa, sem faixas vazias, imagens a carregar rápido.
 
@@ -969,9 +1187,11 @@ await cmd('Emulation.setTouchEmulationEnabled', { enabled: w < 1000, maxTouchPoi
 4. Em cada cenário: `Page.navigate`, correr o cenário com `Runtime.evaluate` (`awaitPromise: true`), esperar pelas animações e pelas imagens visíveis, medir, `Page.captureScreenshot`. O service worker e a cache HTTP ficam desligados (`Network.setBypassServiceWorker`, `Network.setCacheDisabled`), para medir sempre os ficheiros atuais.
 5. **Scroll dentro do ecrã, não só do documento.** Se o ecrã de jogo tem `overflow-y: auto` (o Catania, antes da conversão), o documento não faz scroll e `scrollHeight − innerHeight` dá 0. Mede também o próprio ecrã (`selectors.screen`).
 
+**Um cenário "a sério", além dos fictícios.** Os estados do tutorial passam pelo mesmo `renderGame`, mas não pelo lobby nem pelo servidor. No Catania há um cenário `online` que escreve o nome, entra no lobby, pede a mesa contra bots (`send({ type: 'JOIN_LOBBY', … })`) e espera pelo primeiro estado do servidor.
+
 **Cenários deterministas, montados no cliente.** Jogos aleatórios contra bots não dão o pior caso quando é preciso (6 jogadores, o nome mais comprido, a fila das minhas peças cheia). Se o jogo tem um tutorial com estado fictício (o Capivaras monta estados com o próprio motor do jogo), usa-o: arranca o tutorial, esconde o balão, e escreve diretamente no estado (jogadores, mesa, peças ganhas, fase) antes de chamar o render. Para o tutorial, percorre todos os passos com a função que avança de passo e mede o balão em cada um.
 
-**Esperar pelo fim das animações** antes de medir posições: as bottom sheets sobem em `.25s` (`sheetUp`), e um spotlight medido a meio da subida aponta para o sítio errado. O harness espera por `document.getAnimations()` (animações e transições CSS finitas) e mais dois frames; à mão, ~350ms depois de o cenário estar montado chega.
+**Esperar pelo fim das animações** antes de medir posições: as bottom sheets sobem em `.25s` (`sheetUp`), e um spotlight medido a meio da subida aponta para o sítio errado. O harness espera por `document.getAnimations()` (animações e transições CSS finitas) **em ciclo**, até não haver nenhuma a correr — o fim de uma pode começar outra (a sheet acaba de subir, o balão desliza para o sítio novo) — e mais dois frames; à mão, ~350ms depois de o cenário estar montado chega.
 
 **Desktop "igual ao de antes" com diferença de píxeis.** Corre a versão original (p.ex. um `git worktree` do commit anterior, noutra porta, com `--url`) e a nova, a 1280×800 e 1920×1080, com os mesmos cenários, e compara as capturas (`layout-check.js compare`, ou o Pillow: `ImageChops.difference(a, b).getbbox()` — `None` = iguais). Cuidados:
 

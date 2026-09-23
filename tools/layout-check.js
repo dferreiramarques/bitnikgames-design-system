@@ -238,9 +238,14 @@ const DIAG = `(() => {
 })()`;
 
 // Espera pelo fim das animações/transições finitas (sheetUp, balão a deslizar…)
+// (em ciclo: o fim de uma animação pode começar outra, p.ex. a sheet sobe e o balão desliza)
 const SETTLE = `(async () => {
   const run = () => document.getAnimations().filter(a => a.playState === 'running' && isFinite(a.effect?.getComputedTiming().endTime));
-  await Promise.race([Promise.all(run().map(a => a.finished.catch(() => {}))), new Promise(r => setTimeout(r, 2000))]);
+  const t0 = performance.now();
+  while (run().length && performance.now() - t0 < 2000) {
+    await Promise.race([Promise.all(run().map(a => a.finished.catch(() => {}))), new Promise(r => setTimeout(r, 2000))]);
+    await new Promise(r => requestAnimationFrame(r));
+  }
   await Promise.all([...document.images].filter(i => i.getClientRects().length && !i.complete)
     .map(i => new Promise(r => { i.onload = i.onerror = r; setTimeout(r, 4000); })));
   await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
