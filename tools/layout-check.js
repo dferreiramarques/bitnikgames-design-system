@@ -14,6 +14,11 @@
 //   --tut-shots          uma captura por passo do tutorial (omissão: só as medidas)
 //   --dpr <n>            deviceScaleFactor (omissão: 1)
 //
+// Falhas: scroll da página/ecrã no compacto, peças estreitas ou fora do ecrã,
+// linhas que começam fora do ecrã, modais com scroll, texto cortado
+// (selectors.noTruncate), balão sobre um alvo do tutorial, zonas que mudam de
+// altura entre cenários (stableAcross), e toque que não ficou emulado.
+//
 // Requisitos: Node >= 22 (WebSocket nativo) e Chrome/Chromium/Edge instalado
 // (ou o caminho em CHROME=...). Sem dependências.
 //
@@ -42,7 +47,9 @@ if (typeof WebSocket === 'undefined') {
   process.exit(2);
 }
 if (!argv[0] || argv[0] === '--help' || argv[0] === '-h') {
-  console.log(fs.readFileSync(new URL(import.meta.url), 'utf8').split('\n').slice(1, 22).map(l => l.replace(/^\/\/ ?/, '')).join('\n'));
+  // a ajuda é o comentário do cabeçalho, até à primeira linha que não é comentário
+  const head = fs.readFileSync(new URL(import.meta.url), 'utf8').split('\n').slice(1);
+  console.log(head.slice(0, head.findIndex(l => !l.startsWith('//'))).map(l => l.replace(/^\/\/ ?/, '')).join('\n'));
   process.exit(0);
 }
 
@@ -211,8 +218,11 @@ const DIAG = `(() => {
     hover: matchMedia('(hover: hover)').matches,
     hScroll: Math.max(0, d.scrollWidth - innerWidth),
     vScroll: Math.max(0, d.scrollHeight - innerHeight),
-    zones: {}, scroll: {}, rows: {}, pieces: {}, modalScroll: null, coachOverlap: null, coachOut: null,
+    zones: {}, scroll: {}, rows: {}, pieces: {}, modalScroll: null, coachOverlap: null, coachOut: null, truncated: [],
   };
+  // Texto cortado (ellipsis ou overflow escondido): o conteúdo é mais largo do que a caixa
+  for (const s of S.noTruncate || []) for (const e of document.querySelectorAll(s))
+    if (vis(e) && e.scrollWidth > e.clientWidth + 1) out.truncated.push(s + ': ' + e.textContent.trim().slice(0, 30));
   // Ecrãs que fazem scroll por dentro (overflow-y: auto no ecrã) não mexem no scroll do documento
   const scr = [...document.querySelectorAll(S.screen || ':not(*)')].find(vis);
   out.screenScroll = scr ? Math.max(0, scr.scrollHeight - scr.clientHeight) : null;
@@ -268,6 +278,7 @@ function check(m, scn) {
     if (!p.allInView) fails.push(`${k}: há peças fora do ecrã`);
   }
   if (m.modalScroll > 1) fails.push(`modal com scroll interno (${m.modalScroll}px)`);
+  for (const t of m.truncated || []) fails.push(`texto cortado — ${t}`);
   if (m.coachOverlap) fails.push('balão sobre um alvo do spotlight');
   if (m.coachOut) fails.push('balão fora do ecrã');
   return fails;

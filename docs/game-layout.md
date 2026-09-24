@@ -505,7 +505,8 @@ Para a barra lateral fixa (secção 1): no compacto, a coluna do jogo e a barra 
 ```
 
 - **Informação de apoio** (pilhas, torre) → uma **faixa de valores** numa linha: ícone + valor, sem nomes nem contadores (o `title` mantém-nos).
-- **Ações** → uma barra numa linha, com rótulos curtos decididos no JS ("Recolher 1", "🏛 Fundar").
+- **Ações** → uma barra numa linha, com rótulos curtos decididos no JS. Quando o verbo é o das regras e não se quer mudar ("Recolher"), o rótulo vai em **duas linhas**: o verbo pequeno em cima e a quantidade por baixo (`<small>Recolher</small>2 cartas ⬇`, com `.abtn small { display: block; font-size: .64rem }`). Cabe nos 42px de altura e não obriga a inventar termos que o tutorial não usa. O mesmo para as mensagens de estado que ocupam um botão ("Toca num território / 🎯 1 carta").
+- **Nomes de bots curtos.** Se os bots já têm um 🤖 ao lado do nome, o prefixo "Bot " é repetido e é o que faz o nome ficar cortado numa coluna de ~90px. O Catania passou de "Bot Arquimedes" para "Tales", "Platão" e "Zenão".
 - **Registo, histórico** → bottom sheet aberta por um botão do cabeçalho (6.3).
 - Uma zona da barra **sem `grid-area`** entra na grelha como uma linha a mais, por baixo de tudo: esconde-a ou dá-lhe uma área.
 
@@ -1078,6 +1079,7 @@ Em cada um:
 - [ ] a minha área: `scrollHeight === clientHeight` (sem scroll);
 - [ ] o 1.º adversário e a 1.ª carta começam em `left ≥ 0`;
 - [ ] todas as peças da mesa visíveis, **com uma largura legível** (medida, não só "dentro do ecrã" — secção 2), e os indicadores legíveis;
+- [ ] **nenhum texto cortado** nos botões de ação, nos nomes dos adversários e nas faixas de valores (`scrollWidth > clientWidth`) — com o nome mais comprido possível e em todos os passos do tutorial (os botões mudam de texto a meio de uma jogada);
 - [ ] sobreposições (sobretudo o fim de jogo com equipas / com o máximo de jogadores) sem scroll interno;
 - [ ] balão do tutorial sem sobrepor os anéis do spotlight, em todos os passos;
 - [ ] alturas de cada zona (cabeçalho, jogadores, estado, a minha área) iguais entre estados — a regra de estabilidade verificada, não só lida;
@@ -1148,6 +1150,7 @@ export default {
     noScroll: ['.hand-footer'],
     pieces: { mesa: '#bwrap svg g[onclick]', carta: '#hcards .card' },  // largura mínima + dentro do ecrã
     modal: '.overlay.on .modal',
+    noTruncate: ['.abtn', '.opp-hand .onm', '.rpiles'],        // texto que não pode ficar cortado
     coach: '#tut-coach.on', rings: '.tut-ring',
   },
   minPieceWidth: { mesa: 44, carta: 40 },
@@ -1186,6 +1189,8 @@ await cmd('Emulation.setTouchEmulationEnabled', { enabled: w < 1000, maxTouchPoi
 
 4. Em cada cenário: `Page.navigate`, correr o cenário com `Runtime.evaluate` (`awaitPromise: true`), esperar pelas animações e pelas imagens visíveis, medir, `Page.captureScreenshot`. O service worker e a cache HTTP ficam desligados (`Network.setBypassServiceWorker`, `Network.setCacheDisabled`), para medir sempre os ficheiros atuais.
 5. **Scroll dentro do ecrã, não só do documento.** Se o ecrã de jogo tem `overflow-y: auto` (o Catania, antes da conversão), o documento não faz scroll e `scrollHeight − innerHeight` dá 0. Mede também o próprio ecrã (`selectors.screen`).
+
+**Texto cortado.** `selectors.noTruncate` dá falha quando um elemento visível tem `scrollWidth > clientWidth` — tanto com `text-overflow: ellipsis` como com conteúdo a transbordar por baixo de outra zona (a faixa de valores do Catania a 667×375). Corrida contra a primeira versão do Catania para telemóvel, apanhou exatamente o que o teste num telemóvel real mostrou ("Recolher 2 ⬇" e "Bot Arquimedes" cortados), e mais dois casos que ninguém tinha visto: o botão de estado ao escolher um território e a faixa de valores na horizontal. Mede o layout, mas também o texto.
 
 **Um cenário "a sério", além dos fictícios.** Os estados do tutorial passam pelo mesmo `renderGame`, mas não pelo lobby nem pelo servidor. No Catania há um cenário `online` que escreve o nome, entra no lobby, pede a mesa contra bots (`send({ type: 'JOIN_LOBBY', … })`) e espera pelo primeiro estado do servidor.
 
