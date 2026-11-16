@@ -1,0 +1,158 @@
+/* Estilos só da página de documentação (não fazem parte do pacote). */
+
+html {
+  scroll-padding-top: 5rem;
+}
+
+.install-block {
+  margin-top: 2.5rem;
+  max-width: 640px;
+}
+
+.install-block h2 {
+  font-size: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.section-alt {
+  background: var(--bg-alt);
+}
+
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.9rem;
+  margin-bottom: 2rem;
+}
+
+.sw {
+  background: var(--color-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  font-size: 0.78rem;
+}
+
+.sw-chip {
+  height: 3.2rem;
+  background: var(--c);
+}
+
+.sw-meta {
+  padding: 0.5rem 0.65rem;
+  line-height: 1.35;
+}
+
+.sw-meta code {
+  display: block;
+  font-family: ui-monospace, "JetBrains Mono", monospace;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.example {
+  margin: 0 0 2.25rem;
+}
+
+.example > h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.2rem;
+}
+
+.example > p.text-muted {
+  margin-bottom: 0.8rem;
+  font-size: 0.92rem;
+}
+
+.demo {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.demo .site-header {
+  position: static;
+}
+
+.demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.demo-stack {
+  display: grid;
+  gap: 1rem;
+  max-width: 32rem;
+}
+
+.demo-flush {
+  padding: 0;
+}
+
+.snippet {
+  margin-top: 0.6rem;
+}
+
+.snippet summary {
+  font-size: 0.85rem;
+  padding: 0.6rem 1rem;
+}
+
+.snippet .accordion-body {
+  padding-top: 0.2rem;
+}
+
+.snippet-copy {
+  margin-bottom: 0.6rem;
+}
+
+.snippet .code-block {
+  margin: 0;
+}
+
+.token-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.token-table th,
+.token-table td {
+  text-align: left;
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.token-table th {
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.token-table code {
+  font-family: ui-monospace, "JetBrains Mono", monospace;
+  font-size: 0.82rem;
+}
+
+.type-sample > * + * {
+  margin-top: 0.6rem;
+}
+
+.footer-note {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding-block: 2.5rem;
+}
+
+.footer-note a {
+  color: var(--brand-primary);
+  font-weight: 600;
+}

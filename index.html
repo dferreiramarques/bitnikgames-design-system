@@ -4,253 +4,567 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>bitnikgames design system</title>
-<meta name="description" content="Tokens e componentes base do design system da bitnikgames — CSS puro, sem dependências, reutilizável e skinnable noutros projetos." />
+<meta name="description" content="Tokens, componentes e padrões do design system da bitnikgames — CSS puro, sem dependências, reutilizável e skinnable noutros projetos." />
 <link rel="stylesheet" href="src/index.css" />
+<link rel="stylesheet" href="src/patterns.css" />
+<link rel="stylesheet" href="site/site.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
   href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
   rel="stylesheet"
 />
-<style>
-  .hero {
-    padding-block: clamp(3rem, 7vw, 5.5rem) clamp(2rem, 5vw, 3.5rem);
-    background: radial-gradient(circle at top right, var(--bg-alt), var(--bg) 60%);
-  }
-
-  .hero-inner {
-    max-width: 720px;
-  }
-
-  .hero-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-top: 1.75rem;
-  }
-
-  .install-block {
-    margin-top: 2.5rem;
-    max-width: 620px;
-  }
-
-  .install-block h2 {
-    font-size: 1rem;
-    font-family: var(--font-display);
-    color: var(--text);
-    margin-bottom: 0.6rem;
-  }
-
-  pre.code {
-    background: var(--color-ink);
-    color: var(--color-cream);
-    border-radius: var(--radius-md);
-    padding: 1rem 1.25rem;
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 0.85rem;
-    overflow-x: auto;
-    margin: 0 0 0.75rem;
-  }
-
-  .section-alt {
-    background: var(--bg-alt);
-  }
-
-  .swatch-row {
-    display: flex;
-    gap: 0.6rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-  }
-
-  .swatch {
-    width: 52px;
-    height: 52px;
-    border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-card);
-  }
-
-  .btn-row,
-  .badge-row {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 2rem;
-  }
-
-  .badge-row {
-    gap: 0.6rem;
-  }
-
-  .token-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.88rem;
-    margin-top: 1rem;
-  }
-
-  .token-table th,
-  .token-table td {
-    text-align: left;
-    padding: 0.6rem 0.9rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .token-table th {
-    font-family: var(--font-display);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-  }
-
-  .token-table code {
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 0.82rem;
-  }
-
-  .token-swatch {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    border-radius: 4px;
-    margin-right: 0.5rem;
-    vertical-align: -2px;
-    box-shadow: 0 0 0 1px var(--border);
-  }
-
-  .footer-note {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    padding-block: 2.5rem;
-  }
-
-  .footer-note a {
-    color: var(--brand-primary);
-    font-weight: 600;
-  }
-</style>
 </head>
 <body>
-  <section class="hero">
+  <header class="site-header">
+    <div class="container site-header-bar">
+      <a class="site-brand" href="#topo">design system</a>
+      <nav class="site-nav" aria-label="Secções">
+        <a href="#cores">Cores</a>
+        <a href="#tipografia">Tipografia</a>
+        <a href="#botoes">Botões</a>
+        <a href="#formularios">Formulários</a>
+        <a href="#feedback">Feedback</a>
+        <a href="#navegacao">Navegação</a>
+        <a href="#dados">Dados</a>
+        <a href="#conteudo">Conteúdo</a>
+        <a href="#paginas">Páginas</a>
+        <a href="game-ui.html">Jogos</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero" id="topo">
     <div class="container hero-inner">
       <span class="eyebrow">Design System</span>
       <h1>bitnikgames design system</h1>
-      <p style="font-size: 1.1rem; color: var(--text-muted);">
-        Tokens e componentes base extraídos de bitnikgames.vercel.app — CSS puro, sem dependências, para manter consistência visual entre projetos. Muda uma dúzia de variáveis em <code>tokens.css</code> e tens uma skin nova.
+      <p class="hero-lede">
+        Tokens, componentes e padrões extraídos de bitnikgames.vercel.app — CSS puro, sem dependências, para manter consistência visual entre projetos. Muda uma dúzia de variáveis em <code class="code-inline">tokens.css</code> e tens uma skin nova.
       </p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="skin-builder/index.html">Abrir Skin Builder</a>
-        <a class="btn btn-outline" href="https://github.com/dferreiramarques/bitnikgames-design-system">Ver no GitHub</a>
+        <a class="btn btn-outline" href="game-ui.html">UI de jogo</a>
+        <a class="btn btn-ghost" href="https://github.com/dferreiramarques/bitnikgames-design-system">Ver no GitHub</a>
       </div>
 
       <div class="install-block">
         <h2>Instalar</h2>
-        <pre class="code">npm install git+https://github.com/dferreiramarques/bitnikgames-design-system.git</pre>
-        <pre class="code">@import "@bitnikgames/design-system/src/index.css";</pre>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">
-          Sem npm? Copia a pasta <code>src/</code> para o teu projeto. Ver <a href="README.md" style="color: var(--brand-primary); font-weight: 600;">README</a> para instruções completas, incluindo como carregar as Google Fonts.
+        <pre class="code-block">npm install git+https://github.com/dferreiramarques/bitnikgames-design-system.git</pre>
+        <pre class="code-block">@import "@bitnikgames/design-system/src/index.css";    /* tokens + base + componentes */
+@import "@bitnikgames/design-system/src/patterns.css"; /* opcional: formulários, alertas, navegação… */
+@import "@bitnikgames/design-system/src/game-ui.css";  /* opcional: cartas, chips, modais de jogo */</pre>
+        <p class="text-muted" style="font-size: 0.9rem;">
+          Sem npm? Copia a pasta <code class="code-inline">src/</code> para o teu projeto. Instruções completas, incluindo as Google Fonts, no <a href="https://github.com/dferreiramarques/bitnikgames-design-system#readme" style="color: var(--brand-primary); font-weight: 600;">README</a>.
         </p>
       </div>
     </div>
   </section>
 
-  <section class="section section-alt">
+  <!-- ===================================================== CORES -->
+  <section class="section section-alt" id="cores">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Palette &amp; componentes</span>
-        <h2>O que vem no pacote</h2>
-        <p>Tudo o que vês aqui é o CSS real do pacote — nada de mockup.</p>
+        <span class="eyebrow">Fundamentos</span>
+        <h2>Cores</h2>
+        <p>Três cores de marca, cinco neutros quentes e quatro cores de estado. Tudo o resto referencia estes tokens.</p>
       </div>
 
-      <div class="swatch-row">
-        <div class="swatch" style="background: var(--color-brick)"></div>
-        <div class="swatch" style="background: var(--color-orange)"></div>
-        <div class="swatch" style="background: var(--color-yellow)"></div>
-        <div class="swatch" style="background: var(--color-cream); border: 1px solid var(--border)"></div>
-        <div class="swatch" style="background: var(--color-ink)"></div>
+      <h3>Marca</h3>
+      <div class="swatch-grid">
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-brick)"></div><div class="sw-meta"><strong>Tijolo</strong><code>--color-brick</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-brick-deep)"></div><div class="sw-meta"><strong>Tijolo escuro</strong><code>--color-brick-deep</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-orange)"></div><div class="sw-meta"><strong>Laranja</strong><code>--color-orange</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-orange-deep)"></div><div class="sw-meta"><strong>Laranja escuro</strong><code>--color-orange-deep</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-yellow)"></div><div class="sw-meta"><strong>Amarelo torrado</strong><code>--color-yellow</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-yellow-deep)"></div><div class="sw-meta"><strong>Amarelo escuro</strong><code>--color-yellow-deep</code></div></div>
       </div>
 
-      <div class="btn-row">
-        <button class="btn btn-primary">Botão primário</button>
-        <button class="btn btn-secondary">Botão secundário</button>
-        <button class="btn btn-outline">Botão outline</button>
+      <h3>Neutros</h3>
+      <div class="swatch-grid">
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-cream)"></div><div class="sw-meta"><strong>Creme</strong><code>--color-cream</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-cream-soft)"></div><div class="sw-meta"><strong>Creme suave</strong><code>--color-cream-soft</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-cream-strong)"></div><div class="sw-meta"><strong>Creme forte</strong><code>--color-cream-strong</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-white)"></div><div class="sw-meta"><strong>Branco quente</strong><code>--color-white</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-ink-soft)"></div><div class="sw-meta"><strong>Tinta suave</strong><code>--color-ink-soft</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--color-ink)"></div><div class="sw-meta"><strong>Tinta</strong><code>--color-ink</code></div></div>
       </div>
 
-      <div class="badge-row">
-        <span class="badge badge-accent">Acento</span>
-        <span class="badge badge-primary">Primário</span>
-        <span class="badge badge-secondary">Secundário</span>
-        <span class="badge badge-outline">Outline</span>
-        <span class="badge badge-ink">Ink</span>
+      <h3>Estado</h3>
+      <div class="swatch-grid">
+        <div class="sw"><div class="sw-chip" style="--c: var(--success)"></div><div class="sw-meta"><strong>Sucesso</strong><code>--success</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--warning)"></div><div class="sw-meta"><strong>Aviso</strong><code>--warning</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--danger)"></div><div class="sw-meta"><strong>Perigo</strong><code>--danger</code></div></div>
+        <div class="sw"><div class="sw-chip" style="--c: var(--info)"></div><div class="sw-meta"><strong>Informação</strong><code>--info</code></div></div>
       </div>
 
-      <div class="grid grid-3">
-        <div class="card">
-          <div class="card-media">Cartão de exemplo</div>
-          <div class="card-body">
-            <div class="card-meta"><span>Meta A</span><span>Meta B</span></div>
-            <h3 class="card-title">Título do cartão</h3>
-            <p class="card-excerpt">Uma descrição curta para veres o texto secundário sobre fundo branco.</p>
-            <div class="card-footer">
-              <span class="badge badge-primary">Estado</span>
-              <strong>Preço</strong>
+      <h3>Tokens semânticos</h3>
+      <p class="text-muted">Usa estes nos componentes; mudam sozinhos quando mudas a paleta.</p>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Token</th><th>Aponta para</th><th>Uso</th></tr></thead>
+          <tbody>
+            <tr><td><code class="code-inline">--bg</code></td><td><code class="code-inline">--color-cream</code></td><td>fundo da página</td></tr>
+            <tr><td><code class="code-inline">--bg-alt</code></td><td><code class="code-inline">--color-cream-soft</code></td><td>secções alternadas, cabeçalhos de tabela</td></tr>
+            <tr><td><code class="code-inline">--text</code> / <code class="code-inline">--text-muted</code></td><td><code class="code-inline">--color-ink</code> / <code class="code-inline">-soft</code></td><td>texto principal e secundário</td></tr>
+            <tr><td><code class="code-inline">--border</code></td><td><code class="code-inline">--color-cream-strong</code></td><td>contornos e divisórias</td></tr>
+            <tr><td><code class="code-inline">--brand-primary</code></td><td><code class="code-inline">--color-brick</code></td><td>botões primários, links ativos, foco</td></tr>
+            <tr><td><code class="code-inline">--brand-secondary</code></td><td><code class="code-inline">--color-orange</code></td><td>gradientes, destaques</td></tr>
+            <tr><td><code class="code-inline">--brand-accent</code></td><td><code class="code-inline">--color-yellow</code></td><td>acentos, avatares, badges</td></tr>
+            <tr><td><code class="code-inline">--radius-sm / md / lg / pill</code></td><td colspan="2">8 · 14 · 24 · 999 px</td></tr>
+            <tr><td><code class="code-inline">--motion-fast</code> / <code class="code-inline">--motion-ease</code></td><td colspan="2">160 ms, curva sem ressalto — transições curtas, para jogar a relaxar</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== TIPOGRAFIA -->
+  <section class="section" id="tipografia">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Fundamentos</span>
+        <h2>Tipografia</h2>
+        <p>Baloo 2 para títulos e rótulos, Inter para texto corrido. As duas vêm das variáveis <code class="code-inline">--font-display</code> e <code class="code-inline">--font-body</code>.</p>
+      </div>
+
+      <div class="example">
+        <div class="demo type-sample">
+          <span class="eyebrow">Eyebrow</span>
+          <h1>Título 1 — jogos pequenos</h1>
+          <h2>Título 2 — ideias grandes</h2>
+          <h3>Título 3 — catálogo e blog</h3>
+          <p>Texto corrido em Inter: legível, neutro e com 1.6 de altura de linha. Cada jogo, cada ideia e cada nota de design cabem aqui sem esforço.</p>
+          <p class="text-muted">Texto secundário em <code class="code-inline">.text-muted</code>, para meta-informação e descrições.</p>
+          <p>Teclas e código: <span class="kbd">Ctrl</span> + <span class="kbd">K</span> e <code class="code-inline">var(--brand-primary)</code>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== BOTÕES -->
+  <section class="section section-alt" id="botoes">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Componentes</span>
+        <h2>Botões e etiquetas</h2>
+        <p>Variantes, tamanhos e estados. O botão desativado aceita o atributo <code class="code-inline">disabled</code> ou a classe <code class="code-inline">.is-disabled</code>.</p>
+      </div>
+
+      <div class="example">
+        <h3>Variantes</h3>
+        <div class="demo demo-row">
+          <button class="btn btn-primary">Primário</button>
+          <button class="btn btn-secondary">Secundário</button>
+          <button class="btn btn-outline">Outline</button>
+          <button class="btn btn-ghost">Ghost</button>
+          <button class="btn btn-danger">Apagar</button>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Tamanhos, ícone e estado desativado</h3>
+        <div class="demo demo-row">
+          <button class="btn btn-primary btn-sm">Pequeno</button>
+          <button class="btn btn-primary">Normal</button>
+          <button class="btn btn-primary btn-lg">Grande</button>
+          <button class="btn btn-outline btn-icon" aria-label="Adicionar">+</button>
+          <button class="btn btn-primary" disabled>Desativado</button>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Badges</h3>
+        <div class="demo demo-row">
+          <span class="badge badge-accent">Acento</span>
+          <span class="badge badge-primary">Primário</span>
+          <span class="badge badge-secondary">Secundário</span>
+          <span class="badge badge-outline">Outline</span>
+          <span class="badge badge-ink">Ink</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== FORMULÁRIOS -->
+  <section class="section" id="formularios">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Padrões</span>
+        <h2>Formulários</h2>
+        <p>Campos com rótulo, ajuda e erro. O estado inválido usa <code class="code-inline">aria-invalid="true"</code>, que também serve a leitores de ecrã.</p>
+      </div>
+
+      <div class="example">
+        <h3>Campos de texto</h3>
+        <div class="demo demo-stack">
+          <div class="field">
+            <label for="f-nome">Nome do jogo</label>
+            <input class="input" id="f-nome" type="text" placeholder="Ex.: Capivaras" />
+            <p class="field-hint">Aparece no catálogo e no endereço da página.</p>
+          </div>
+          <div class="field">
+            <label for="f-email">Email</label>
+            <input class="input" id="f-email" type="email" value="ola@exemplo" aria-invalid="true" aria-describedby="f-email-erro" />
+            <p class="field-error" id="f-email-erro">Falta o domínio, por exemplo ola@exemplo.pt.</p>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-jogadores">Jogadores</label>
+              <select class="select" id="f-jogadores">
+                <option>2 jogadores</option>
+                <option selected>2 a 4 jogadores</option>
+                <option>1 a 6 jogadores</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-preco">Preço</label>
+              <input class="input" id="f-preco" type="text" value="12,00 €" disabled />
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-notas">Notas de design</label>
+            <textarea class="textarea" id="f-notas" placeholder="O que mudou nesta versão?"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Escolhas e interruptor</h3>
+        <div class="demo demo-stack">
+          <label class="check"><input type="checkbox" checked /> Receber novidades por email</label>
+          <label class="check"><input type="radio" name="modo" checked /> Print &amp; play</label>
+          <label class="check"><input type="radio" name="modo" /> Edição física</label>
+          <label class="check"><input class="switch" type="checkbox" role="switch" checked /> Jogo público no catálogo</label>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Pesquisa com botão</h3>
+        <div class="demo">
+          <form class="input-group" style="max-width: 28rem;" onsubmit="return false">
+            <input class="input" type="search" placeholder="Pesquisar jogos…" aria-label="Pesquisar" />
+            <button class="btn btn-primary">Pesquisar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== FEEDBACK -->
+  <section class="section section-alt" id="feedback">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Padrões</span>
+        <h2>Feedback</h2>
+        <p>Alertas para mensagens que ficam na página, barra de progresso, esqueleto e indicador para esperas.</p>
+      </div>
+
+      <div class="example">
+        <h3>Alertas</h3>
+        <div class="demo demo-stack" style="max-width: 100%;">
+          <div class="alert">
+            <div><span class="alert-title">Nova versão</span>As regras da v2.1 já estão no catálogo.</div>
+          </div>
+          <div class="alert alert-success">
+            <div><span class="alert-title">Guardado</span>O jogo foi publicado e já aparece no site.</div>
+          </div>
+          <div class="alert alert-warning">
+            <div><span class="alert-title">Falta a tradução</span>A entrada tem texto em português mas não em inglês.</div>
+          </div>
+          <div class="alert alert-danger" role="alert">
+            <div><span class="alert-title">Não foi possível guardar</span>Verifica a ligação e tenta outra vez.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Progresso, esqueleto e carregamento</h3>
+        <p class="text-muted">A largura da barra vem de <code class="code-inline">style="--value: 62%"</code>. Com movimento reduzido, as animações abrandam.</p>
+        <div class="demo demo-stack" style="max-width: 100%;">
+          <div class="field">
+            <label>Protótipo concluído — 62%</label>
+            <div class="progress" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"><span class="progress-bar" style="--value: 62%"></span></div>
+          </div>
+          <div style="display: grid; gap: 0.6rem;">
+            <span class="skeleton" style="height: 1.4rem; width: 55%;"></span>
+            <span class="skeleton" style="height: 1rem;"></span>
+            <span class="skeleton" style="height: 1rem; width: 80%;"></span>
+          </div>
+          <div class="demo-row"><span class="spinner" role="status" aria-label="A carregar"></span><span class="text-muted">A carregar partidas…</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== NAVEGAÇÃO -->
+  <section class="section" id="navegacao">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Padrões</span>
+        <h2>Navegação</h2>
+        <p>Cabeçalho colante, rodapé, migalhas e paginação. O cabeçalho no topo desta página é o próprio <code class="code-inline">.site-header</code>.</p>
+      </div>
+
+      <div class="example">
+        <h3>Cabeçalho</h3>
+        <p class="text-muted">A ligação da página atual leva <code class="code-inline">aria-current="page"</code>. Em ecrãs estreitos a lista desliza na horizontal, sem JavaScript.</p>
+        <div class="demo demo-flush">
+          <header class="site-header">
+            <div class="container site-header-bar">
+              <a class="site-brand" href="#navegacao">bitnikgames</a>
+              <nav class="site-nav" aria-label="Principal">
+                <a href="#navegacao">Catálogo</a>
+                <a href="#navegacao" aria-current="page">Print &amp; play</a>
+                <a href="#navegacao">Blog</a>
+                <a href="#navegacao">Sobre</a>
+                <a class="btn btn-outline btn-sm" href="#navegacao">EN</a>
+              </nav>
+            </div>
+          </header>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Migalhas e paginação</h3>
+        <div class="demo demo-stack" style="max-width: 100%;">
+          <nav aria-label="Migalhas">
+            <ol class="breadcrumb">
+              <li><a href="#navegacao">Início</a></li>
+              <li><a href="#navegacao">Catálogo</a></li>
+              <li aria-current="page">Capivaras</li>
+            </ol>
+          </nav>
+          <nav aria-label="Páginas">
+            <ul class="pagination">
+              <li><a class="page-link" href="#navegacao" aria-disabled="true">‹</a></li>
+              <li><a class="page-link" href="#navegacao" aria-current="page">1</a></li>
+              <li><a class="page-link" href="#navegacao">2</a></li>
+              <li><a class="page-link" href="#navegacao">3</a></li>
+              <li><a class="page-link" href="#navegacao">›</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Rodapé</h3>
+        <div class="demo demo-flush">
+          <footer class="site-footer">
+            <div class="container">
+              <div class="footer-grid">
+                <div class="footer-brand">
+                  <a class="site-brand" href="#navegacao" style="color: var(--color-yellow);">bitnikgames</a>
+                  <p>Publisher independente de jogos de tabuleiro.</p>
+                </div>
+                <div class="footer-col">
+                  <h3>Explorar</h3>
+                  <ul><li><a href="#navegacao">Catálogo</a></li><li><a href="#navegacao">Print &amp; play</a></li><li><a href="#navegacao">Blog</a></li></ul>
+                </div>
+                <div class="footer-col">
+                  <h3>Contacto</h3>
+                  <ul><li><a href="#navegacao">Email</a></li><li><a href="#navegacao">itch.io</a></li></ul>
+                </div>
+              </div>
+              <div class="footer-bottom">© bitnikgames · Todos os direitos reservados</div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== DADOS -->
+  <section class="section section-alt" id="dados">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Padrões</span>
+        <h2>Dados</h2>
+        <p>Tabela com deslocação horizontal em ecrãs pequenos, números em destaque e avatares.</p>
+      </div>
+
+      <div class="example">
+        <h3>Tabela</h3>
+        <div class="demo demo-flush">
+          <div class="table-wrap" style="border: 0; border-radius: 0;">
+            <table class="data-table">
+              <thead>
+                <tr><th>Jogo</th><th>Jogadores</th><th>Estado</th><th class="is-num">Partidas</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Capivaras</strong></td><td>2–6</td><td><span class="badge badge-primary">Online</span></td><td class="is-num">1 284</td></tr>
+                <tr><td><strong>Bulbous</strong></td><td>2 ou 4</td><td><span class="badge badge-primary">Online</span></td><td class="is-num">962</td></tr>
+                <tr><td><strong>Nine Oils</strong></td><td>2</td><td><span class="badge badge-accent">Beta</span></td><td class="is-num">431</td></tr>
+                <tr><td><strong>Zombiquerque</strong></td><td>1–4</td><td><span class="badge badge-outline">Print &amp; play</span></td><td class="is-num">—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Estatísticas e avatares</h3>
+        <div class="demo">
+          <div class="grid grid-3">
+            <div class="stat"><span class="stat-value">1 284</span><span class="stat-label">Partidas este mês</span><span class="stat-delta">▲ 12% face ao mês anterior</span></div>
+            <div class="stat"><span class="stat-value">4,6</span><span class="stat-label">Nota média</span><span class="stat-delta is-down">▼ 0,1</span></div>
+            <div class="stat">
+              <span class="avatar-group" aria-label="Equipa">
+                <span class="avatar avatar-lg">DM</span>
+                <span class="avatar avatar-lg" style="background: var(--brand-secondary); color: var(--color-white);">AB</span>
+                <span class="avatar avatar-lg" style="background: var(--brand-primary); color: var(--color-white);">CS</span>
+              </span>
+              <span class="stat-label" style="margin-top: 0.4rem;">Equipa de testes</span>
             </div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-media">Outro cartão</div>
-          <div class="card-body">
-            <div class="card-meta"><span>Meta A</span><span>Meta B</span></div>
-            <h3 class="card-title">.grid-3 responsivo</h3>
-            <p class="card-excerpt">Colapsa para 2 colunas em tablet e 1 em mobile automaticamente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== CONTEÚDO -->
+  <section class="section" id="conteudo">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Padrões</span>
+        <h2>Conteúdo</h2>
+        <p>Acordeão com <code class="code-inline">&lt;details&gt;</code> nativo, passos numerados, dicas e divisores.</p>
+      </div>
+
+      <div class="example">
+        <h3>Acordeão</h3>
+        <div class="demo">
+          <details class="accordion" open>
+            <summary>Quantas pessoas podem jogar?</summary>
+            <div class="accordion-body"><p>Entre duas e seis, consoante o jogo. O número aparece em cada ficha do catálogo.</p></div>
+          </details>
+          <details class="accordion">
+            <summary>Posso jogar sem imprimir?</summary>
+            <div class="accordion-body"><p>Sim, os jogos online abrem no browser e não precisam de instalação.</p></div>
+          </details>
+          <details class="accordion">
+            <summary>Há versões em inglês?</summary>
+            <div class="accordion-body"><p>Todo o conteúdo existe sempre em português e inglês.</p></div>
+          </details>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Passos e dicas</h3>
+        <div class="demo">
+          <ol class="steps">
+            <li><h3>Prepara a mesa</h3><p>Baralha as cartas e dá quatro a cada jogador.</p></li>
+            <li><h3>Joga por turnos</h3><p>Cada jogador escolhe uma carta e resolve o seu efeito.</p></li>
+            <li><h3>Conta os pontos</h3><p>Quem tiver mais capivaras no fim da ronda ganha.</p></li>
+          </ol>
+          <hr class="divider" />
+          <p style="margin: 0;">
+            Passa o rato ou foca
+            <span class="tooltip badge badge-outline" tabindex="0" data-tip="Jogo de duas a quatro pessoas, cerca de 30 minutos">2–4 · 30 min</span>
+            para ver a dica.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== PÁGINAS -->
+  <section class="section section-alt" id="paginas">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Padrões</span>
+        <h2>Blocos de página</h2>
+        <p>Peças grandes para montar uma página: destaques, chamada para ação, cartões e estado vazio.</p>
+      </div>
+
+      <div class="example">
+        <h3>Destaques</h3>
+        <div class="demo">
+          <div class="feature-grid">
+            <div class="feature"><span class="feature-icon" aria-hidden="true">🎲</span><h3>Jogos pequenos</h3><p>Caixas compactas, regras claras e partidas de meia hora.</p></div>
+            <div class="feature"><span class="feature-icon" aria-hidden="true">🖨️</span><h3>Print &amp; play</h3><p>Imprime em casa, grátis ou pagando o que quiseres.</p></div>
+            <div class="feature"><span class="feature-icon" aria-hidden="true">🌍</span><h3>Português e inglês</h3><p>Todo o conteúdo existe nas duas línguas, sempre.</p></div>
           </div>
         </div>
-        <div class="card">
-          <div class="card-media">Terceiro</div>
-          <div class="card-body">
-            <div class="card-meta"><span>Meta A</span><span>Meta B</span></div>
-            <h3 class="card-title">Sombra e hover</h3>
-            <p class="card-excerpt">Passa o rato — <code>--shadow-card-hover</code> deriva de <code>--shadow-color-rgb</code>.</p>
+      </div>
+
+      <div class="example">
+        <h3>Chamada para ação</h3>
+        <div class="demo">
+          <div class="cta-banner">
+            <div>
+              <h3>Joga o próximo protótipo</h3>
+              <p>Testa online, sem instalar nada, e diz-nos o que achas.</p>
+            </div>
+            <a class="btn btn-primary btn-lg" href="#paginas">Jogar agora</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Cartões</h3>
+        <div class="demo">
+          <div class="grid grid-3">
+            <div class="card">
+              <div class="card-media">Capa do jogo</div>
+              <div class="card-body">
+                <div class="card-meta"><span>2–6 jogadores</span><span>30 min</span></div>
+                <h3 class="card-title">Capivaras</h3>
+                <p class="card-excerpt">Junta a tua família de capivaras antes que a maré suba.</p>
+                <div class="card-footer"><span class="badge badge-primary">Online</span><strong>Grátis</strong></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-media">Outro jogo</div>
+              <div class="card-body">
+                <div class="card-meta"><span>2 jogadores</span><span>20 min</span></div>
+                <h3 class="card-title">Nine Oils</h3>
+                <p class="card-excerpt">Duelo de cartas no velho oeste, com óleo de cobra.</p>
+                <div class="card-footer"><span class="badge badge-accent">Beta</span><strong>12 €</strong></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-media">Em breve</div>
+              <div class="card-body">
+                <div class="card-meta"><span>1–4 jogadores</span></div>
+                <h3 class="card-title">Zombiquerque</h3>
+                <p class="card-excerpt">Cooperativo para sobreviver até de manhã.</p>
+                <div class="card-footer"><span class="badge badge-outline">Print &amp; play</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Estado vazio</h3>
+        <div class="demo">
+          <div class="empty-state">
+            <div class="empty-state-icon" aria-hidden="true">🎴</div>
+            <h3>Ainda não há jogos aqui</h3>
+            <p>Quando publicares o primeiro protótipo, aparece nesta lista.</p>
+            <a class="btn btn-primary" href="#paginas">Criar jogo</a>
           </div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ===================================================== GUIAS -->
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <span class="eyebrow">Referência</span>
-        <h2>Tokens principais</h2>
-        <p>Tabela completa no <a href="README.md" style="color: var(--brand-primary); font-weight: 600;">README</a>.</p>
-      </div>
-      <table class="token-table">
-        <thead>
-          <tr><th>Token</th><th>Valor</th><th>Uso</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>--brand-primary</code></td><td><span class="token-swatch" style="background:#b8461f"></span><code>#b8461f</code></td><td>botões primários, links ativos</td></tr>
-          <tr><td><code>--brand-secondary</code></td><td><span class="token-swatch" style="background:#ea7c2e"></span><code>#ea7c2e</code></td><td>gradientes, hover</td></tr>
-          <tr><td><code>--brand-accent</code></td><td><span class="token-swatch" style="background:#e8a93b"></span><code>#e8a93b</code></td><td>acentos, badges</td></tr>
-          <tr><td><code>--bg</code></td><td><span class="token-swatch" style="background:#fbf3e4"></span><code>#fbf3e4</code></td><td>fundo principal</td></tr>
-          <tr><td><code>--text</code></td><td><span class="token-swatch" style="background:#2b1b12"></span><code>#2b1b12</code></td><td>texto principal</td></tr>
-          <tr><td><code>--font-display</code></td><td colspan="2">Baloo 2 — títulos</td></tr>
-          <tr><td><code>--font-body</code></td><td colspan="2">Inter — corpo de texto</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="section section-alt">
-    <div class="container">
-      <div class="section-head">
-        <span class="eyebrow">Guias</span>
-        <h2>Jogos em telemóvel</h2>
-        <p>Como está organizado o ecrã de um jogo e como se converte para telemóvel, com o Bulbous e o Capivaras como exemplo.</p>
+        <span class="eyebrow">Mais</span>
+        <h2>Jogos e guias</h2>
+        <p>Para além do site: a camada para ecrãs de jogo e a receita para converter um jogo para telemóvel.</p>
       </div>
       <div class="grid grid-3">
+        <a class="card" href="game-ui.html" style="text-decoration: none; color: inherit;">
+          <div class="card-body">
+            <div class="card-meta"><span>Exemplos</span><span>game-ui.css</span></div>
+            <h3 class="card-title">UI de jogo</h3>
+            <p class="card-excerpt">Chips de cor, cartas, badge circular, modal, tabs e toast — com o código de cada um.</p>
+          </div>
+        </a>
         <a class="card" href="docs/game-layout.html" style="text-decoration: none; color: inherit;">
           <div class="card-body">
             <div class="card-meta"><span>Guia</span><span>docs/game-layout.md</span></div>
@@ -262,14 +576,7 @@
           <div class="card-body">
             <div class="card-meta"><span>Ferramenta</span><span>tools/layout-check.js</span></div>
             <h3 class="card-title">Medir o layout de um jogo</h3>
-            <p class="card-excerpt">Chrome headless em 8 tamanhos de ecrã, cenários do próprio jogo e o tutorial passo a passo; compara capturas píxel a píxel.</p>
-          </div>
-        </a>
-        <a class="card" href="https://github.com/dferreiramarques/bitnikgames-design-system/blob/main/src/game-ui.css" style="text-decoration: none; color: inherit;">
-          <div class="card-body">
-            <div class="card-meta"><span>CSS</span><span>src/game-ui.css</span></div>
-            <h3 class="card-title">Partes genéricas prontas</h3>
-            <p class="card-excerpt"><code>100dvh</code>, alvos de toque, bottom sheets, <code>.hdr-compact</code>, <code>.game-sheet</code>, mão colapsável e resumo automático.</p>
+            <p class="card-excerpt">Chrome headless em 8 tamanhos de ecrã, cenários do próprio jogo e o tutorial passo a passo.</p>
           </div>
         </a>
       </div>
@@ -280,5 +587,7 @@
     MIT License · Extraído de <a href="https://bitnikgames.vercel.app">bitnikgames.vercel.app</a> ·
     <a href="https://github.com/dferreiramarques/bitnikgames-design-system">código no GitHub</a>
   </p>
+
+  <script src="site/demo.js"></script>
 </body>
 </html>

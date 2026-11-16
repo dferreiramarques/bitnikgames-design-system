@@ -30,6 +30,18 @@
   --text-muted: var(--color-ink-soft);
   --border: var(--color-cream-strong);
 
+  /* --- estados (alertas, erros de formulário, progresso) ---
+     Quentes o suficiente para conviver com a paleta, mas inconfundíveis. */
+  --color-success: #3f7d4e;
+  --color-warning: #c4841f;
+  --color-danger: #b3261e;
+  --color-info: #2f6f8f;
+
+  --success: var(--color-success);
+  --warning: var(--color-warning);
+  --danger: var(--color-danger);
+  --info: var(--color-info);
+
   --brand-primary: var(--color-brick);
   --brand-primary-hover: var(--color-brick-deep);
   --brand-secondary: var(--color-orange);

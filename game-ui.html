@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>UI de jogo — bitnikgames design system</title>
+<meta name="description" content="Exemplos da camada game-ui.css: chips de cor, cartas, badge circular, modal, tabs, toast, mão colapsável e resumo automático." />
+<link rel="stylesheet" href="src/index.css" />
+<link rel="stylesheet" href="src/patterns.css" />
+<link rel="stylesheet" href="src/game-ui.css" />
+<link rel="stylesheet" href="site/site.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  /* O game-ui.css fixa html/body a 100dvh e desliga o overscroll, o que é certo
+     para um ecrã de jogo mas partiria o scroll desta página de documentação. */
+  html,
+  body {
+    height: auto;
+    overscroll-behavior: auto;
+  }
+
+  /* Exemplos de componentes que normalmente são fixos ao ecrã. */
+  .demo .toast {
+    position: static;
+    transform: none;
+    display: inline-block;
+  }
+
+  .demo .modal-overlay {
+    position: static;
+    background: none;
+    backdrop-filter: none;
+    padding: 0;
+  }
+
+  .tile {
+    width: 5.5rem;
+    aspect-ratio: 2 / 3;
+    flex: none;
+  }
+
+  .tile-face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: var(--color-white);
+    background: linear-gradient(160deg, var(--game-color-1), var(--game-color-2));
+  }
+
+  .tile-wrap {
+    position: relative;
+  }
+
+  .tile-wrap .badge-circle {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    z-index: 11;
+  }
+
+  /* skin escura de exemplo: só troca valores de tokens */
+  .skin-night {
+    --bg: #14110d;
+    --bg-alt: #221c15;
+    --text: #f1e7d3;
+    --text-muted: #b7a98f;
+    --border: #3b3226;
+    --brand-primary: #c084fc;
+    --color-white: #1d1812;
+    --game-color-1: #e05a5a;
+    --game-color-2: #5a8de0;
+    --game-color-3: #5ac28a;
+    --game-color-4: #e0c15a;
+    /* os -dim são calculados no :root, por isso numa skin à parte têm de ser repetidos */
+    --game-color-1-dim: color-mix(in srgb, var(--game-color-1) 18%, var(--bg));
+    --game-color-2-dim: color-mix(in srgb, var(--game-color-2) 18%, var(--bg));
+    --game-color-3-dim: color-mix(in srgb, var(--game-color-3) 18%, var(--bg));
+    --game-color-4-dim: color-mix(in srgb, var(--game-color-4) 18%, var(--bg));
+    --shadow-color-rgb: 0, 0, 0;
+    background: var(--bg);
+    color: var(--text);
+  }
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header-bar">
+      <a class="site-brand" href="index.html">design system</a>
+      <nav class="site-nav" aria-label="Secções">
+        <a href="index.html">Padrões</a>
+        <a href="game-ui.html" aria-current="page">Jogos</a>
+        <a href="skin-builder/index.html">Skin Builder</a>
+        <a href="docs/game-layout.html">Layout de jogo</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="eyebrow">Camada opcional</span>
+      <h1>UI de jogo</h1>
+      <p class="hero-lede">
+        Peças reutilizáveis de ecrãs de jogo — cartas, chips de equipa, modais, tabs e toasts — extraídas de jogos reais. Importa <code class="code-inline">game-ui.css</code> depois do <code class="code-inline">index.css</code> e define as quatro cores de jogo de cada jogo.
+      </p>
+      <pre class="code-block">@import "@bitnikgames/design-system/src/index.css";
+@import "@bitnikgames/design-system/src/game-ui.css";</pre>
+      <div class="alert alert-warning" style="max-width: 640px;">
+        <div><span class="alert-title">Só para ecrãs de jogo</span>Esta camada fixa <code class="code-inline">html</code> e <code class="code-inline">body</code> a <code class="code-inline">100dvh</code> e desliga o overscroll. Não a importes num site de conteúdo; ver o <a href="docs/game-layout.html" style="color: var(--brand-primary); font-weight: 600;">guia de layout</a>.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Cor de jogo</span>
+        <h2>Chips e badge circular</h2>
+        <p>Quatro cores por jogo (<code class="code-inline">--game-color-1..4</code>) para equipas, jogadores ou naipes. O chip tem contorno, fundo diluído e texto na cor, por isso lê-se bem até em fundos escuros.</p>
+      </div>
+
+      <div class="example">
+        <h3>Chips</h3>
+        <div class="demo demo-row">
+          <span class="chip chip-1">Vermelhos</span>
+          <span class="chip chip-2">Laranjas</span>
+          <span class="chip chip-3">Amarelos</span>
+          <span class="chip chip-4">Neutros</span>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Badge circular</h3>
+        <p class="text-muted">Numeração ou ordem de jogo, normalmente sobreposta a uma peça.</p>
+        <div class="demo demo-row">
+          <span class="badge-circle">1</span>
+          <span class="badge-circle">2</span>
+          <span class="badge-circle">3</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Peças</span>
+        <h2>Cartas</h2>
+        <p>Estados <code class="code-inline">.is-clickable</code>, <code class="code-inline">.is-selected</code> e <code class="code-inline">.is-disabled</code>. O hover só levanta a carta em dispositivos com rato.</p>
+      </div>
+
+      <div class="example">
+        <div class="demo demo-row" style="gap: 1.4rem; padding-top: 1.8rem;">
+          <div class="tile-wrap">
+            <div class="game-card tile">
+              <div class="tile-face">A</div>
+              <div class="game-card-bar">Normal</div>
+            </div>
+          </div>
+          <div class="tile-wrap">
+            <div class="game-card tile is-clickable">
+              <div class="tile-face">B</div>
+              <div class="game-card-bar">Clicável</div>
+            </div>
+            <span class="badge-circle">1</span>
+          </div>
+          <div class="tile-wrap">
+            <div class="game-card tile is-clickable is-selected">
+              <div class="tile-face">C</div>
+              <div class="game-card-bar">Selecionada</div>
+            </div>
+            <span class="badge-circle">2</span>
+          </div>
+          <div class="tile-wrap">
+            <div class="game-card tile is-disabled">
+              <div class="tile-face">D</div>
+              <div class="game-card-bar">Indisponível</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Mão colapsável</h3>
+        <p class="text-muted">Uma fila com <code class="code-inline">.game-row</code> que nunca corta o início, e o botão tracejado do tamanho de uma carta.</p>
+        <div class="demo">
+          <div class="game-row" style="--card-h: 8.25rem;">
+            <div class="game-card tile is-clickable"><div class="tile-face">1</div></div>
+            <div class="game-card tile is-clickable"><div class="tile-face">2</div></div>
+            <div class="game-card tile is-clickable"><div class="tile-face">3</div></div>
+            <button class="hand-toggle" type="button"><b>+4</b><small>outras</small></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Sobreposições</span>
+        <h2>Modal, tabs, toast e resumo</h2>
+        <p>Em produção o modal e o toast são fixos ao ecrã; aqui aparecem no sítio para se verem.</p>
+      </div>
+
+      <div class="example">
+        <h3>Modal</h3>
+        <p class="text-muted">Em ecrãs estreitos (até 640 px) vira uma folha encostada em baixo, na zona do polegar.</p>
+        <div class="demo">
+          <div class="modal-overlay">
+            <div class="modal-box" role="dialog" aria-label="Fim de jogo">
+              <h3>Fim de jogo</h3>
+              <p>A equipa vermelha ganhou por 12 a 9.</p>
+              <div class="demo-row">
+                <button class="btn btn-primary">Jogar outra vez</button>
+                <button class="btn btn-ghost">Sair</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Tabs</h3>
+        <div class="demo">
+          <div class="tabs" role="tablist">
+            <button class="tab active" role="tab" aria-selected="true">Regras</button>
+            <button class="tab" role="tab">Pontuação</button>
+            <button class="tab" role="tab">Histórico</button>
+          </div>
+          <p class="text-muted" style="margin: 0;">Conteúdo do separador ativo.</p>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Toast</h3>
+        <div class="demo">
+          <span class="toast" role="status">Carta jogada: 7 de copas</span>
+        </div>
+      </div>
+
+      <div class="example">
+        <h3>Resumo automático</h3>
+        <p class="text-muted">Substitui um botão "Continuar": a barra esvazia-se e o resumo fecha ao fim do tempo. A cor da barra é a cor do texto.</p>
+        <div class="demo">
+          <button class="recap-pill" type="button" style="color: var(--game-color-1);">🏆 Vermelhos ganham a vaza<span class="recap-timer" style="animation-duration: 6s; animation-iteration-count: infinite;"></span></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Skins</span>
+        <h2>A mesma UI, outra pele</h2>
+        <p>Cada jogo troca só valores de tokens. Aqui, uma skin escura com as quatro cores de equipa redefinidas — nada mais muda. Se redefinires as cores fora do <code class="code-inline">:root</code>, repete também os <code class="code-inline">--game-color-N-dim</code>, porque são calculados no <code class="code-inline">:root</code>.</p>
+      </div>
+
+      <div class="example">
+        <div class="demo skin-night">
+          <div class="demo-row" style="margin-bottom: 1.2rem;">
+            <span class="chip chip-1">Vermelhos</span>
+            <span class="chip chip-2">Azuis</span>
+            <span class="chip chip-3">Verdes</span>
+            <span class="chip chip-4">Amarelos</span>
+            <span class="btn btn-primary btn-sm">Jogar</span>
+          </div>
+          <div class="demo-row" style="gap: 1.4rem; padding-top: 0.5rem;">
+            <div class="tile-wrap">
+              <div class="game-card tile is-clickable is-selected"><div class="tile-face">A</div><div class="game-card-bar">Selecionada</div></div>
+              <span class="badge-circle">1</span>
+            </div>
+            <div class="tile-wrap">
+              <div class="game-card tile is-clickable"><div class="tile-face">B</div><div class="game-card-bar">Clicável</div></div>
+            </div>
+          </div>
+          <div class="tabs" style="margin-top: 1.4rem;">
+            <button class="tab active">Regras</button>
+            <button class="tab">Pontuação</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="footer-note">
+    MIT License · <a href="index.html">Voltar aos padrões</a> ·
+    <a href="https://github.com/dferreiramarques/bitnikgames-design-system">código no GitHub</a>
+  </p>
+
+  <script src="site/demo.js"></script>
+</body>
+</html>

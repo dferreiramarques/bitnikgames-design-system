@@ -65,7 +65,9 @@ Skinar à mão é só substituir os valores no topo do ficheiro:
 | `--color-cream` / `--color-cream-soft` / `--color-cream-strong` | `#fbf3e4` / `#f3e4cb` / `#ecd6ac` | fundo, fundo alt, contornos |
 | `--color-ink` / `--color-ink-soft` | `#2b1b12` / `#5b4636` | texto principal / secundário |
 | `--color-white` | `#fffaf1` | branco quente (cartões) |
+| `--color-success` / `--color-warning` / `--color-danger` / `--color-info` | `#3f7d4e` / `#c4841f` / `#b3261e` / `#2f6f8f` | estados (alertas, erros); semânticos `--success`, `--warning`, `--danger`, `--info` |
 | `--radius-sm` / `--radius-md` / `--radius-lg` / `--radius-pill` | `8px` / `14px` / `24px` / `999px` | cantos |
+| `--motion-fast` / `--motion-ease` | `160ms` / `cubic-bezier(0.2, 0.7, 0.3, 1)` | transições curtas e sem ressalto |
 | `--shadow-card` / `--shadow-card-hover` | — | sombra de cartões, deriva de `--shadow-color-rgb` |
 | `--font-display` | `"Baloo 2"` | títulos |
 | `--font-body` | `"Inter"` | corpo de texto |
@@ -83,6 +85,24 @@ Tokens semânticos (`--bg`, `--text`, `--brand-primary`, etc.) apontam para os t
 
 Nota sobre os badges: no site da bitnikgames os nomes são específicos ao domínio (`badge-free`, `badge-paid`, `badge-pwyw`...). Aqui generalizei para nomes semânticos (`badge-accent`, `badge-primary`...) para o pacote fazer sentido fora do contexto de "jogos". Se importares isto de volta para o site da bitnikgames, os nomes não batem certo — usa um mapeamento ou ajusta as classes lá.
 
+## Camada opcional: padrões (`patterns.css`)
+
+Formulários, alertas, navegação, tabelas e blocos de página. Não é importada por `index.css`; importa-a à parte, depois dele:
+
+```css
+@import "@bitnikgames/design-system/src/patterns.css";
+```
+
+- **Botões**: `.btn-sm` / `.btn-lg` / `.btn-icon` / `.btn-danger` e o estado `:disabled` (ou `.is-disabled`)
+- **Formulários**: `.field` (`label`, `.field-hint`, `.field-error`), `.field-row`, `.input` / `.select` / `.textarea` (estado inválido com `aria-invalid="true"`), `.input-group`, `.check` (caixa e rádio), `.switch`
+- **Feedback**: `.alert` + `-success` / `-warning` / `-danger`, `.progress` + `.progress-bar` (`style="--value: 60%"`), `.skeleton`, `.spinner`
+- **Navegação**: `.site-header` / `.site-header-bar` / `.site-brand` / `.site-nav`, `.site-footer` / `.footer-grid`, `.breadcrumb`, `.pagination` + `.page-link`
+- **Dados**: `.table-wrap` + `.data-table`, `.stat`, `.avatar` / `.avatar-group`
+- **Conteúdo**: `.accordion` (`<details>`), `.steps`, `.kbd`, `.code-block` / `.code-inline`, `.divider`, `.tooltip` (`data-tip`)
+- **Blocos de página**: `.hero`, `.feature-grid` + `.feature`, `.cta-banner`, `.empty-state`
+
+Sem JavaScript e sem cores fixas: só tokens, por isso uma skin nova segue sozinha. Exemplos com o HTML de cada um em [design.bitnik.games](http://design.bitnik.games) (`index.html`).
+
 ## Camada opcional: UI de jogo (`game-ui.css`)
 
 Não é importada por `index.css` — só faz sentido em projetos com UI de jogo (tabuleiro, cartas). Extraída do primeiro jogo integrado no catálogo "jogar online" da bitnikgames ([Bulbous](https://github.com/dferreiramarques/bulbous)).
@@ -99,7 +119,7 @@ Não é importada por `index.css` — só faz sentido em projetos com UI de jogo
 - **`.toast`** — notificação transitória, centrada em baixo.
 - **Layout em telemóvel** — `100dvh`, hover só em `(hover: hover)`, alvos de toque ≥ 44px, `.game-row` (fila com scroll que não corta o início), `html.edge .game-header` (safe areas só em ecrã inteiro), `.hand-toggle` (mão colapsável), `.recap-pill` + `.recap-timer` (resumo que fecha sozinho), `.modal-box` como bottom sheet, `.hdr-compact` (botões só do telemóvel), `.game-sheet` (painel não modal como bottom sheet).
 
-Layout de jogos e conversão para mobile → [docs/game-layout.md](docs/game-layout.md) (publicado em [design.bitnik.games/docs/game-layout.html](http://design.bitnik.games/docs/game-layout.html)). Para medir um jogo em vários tamanhos de ecrã: [`tools/layout-check.js`](tools/layout-check.js) (secção 8 do guia).
+Exemplos de cada peça, com o HTML: [`game-ui.html`](game-ui.html). Layout de jogos e conversão para mobile → [docs/game-layout.md](docs/game-layout.md) (publicado em [design.bitnik.games/docs/game-layout.html](http://design.bitnik.games/docs/game-layout.html)). Para medir um jogo em vários tamanhos de ecrã: [`tools/layout-check.js`](tools/layout-check.js) (secção 8 do guia).
 
 ## Estrutura
 
@@ -108,17 +128,22 @@ src/
   tokens.css       — cor, tipografia, forma, sombra (a única camada "skinnable")
   base.css          — reset + elementos base (body, headings, links, focus)
   components.css     — layout, botões, badges, cartões
+  patterns.css        — opcional: formulários, alertas, navegação, tabelas, blocos de página
   game-ui.css         — opcional: cartas, chips, modais, tabs, toasts (jogos)
-  index.css          — importa tokens+base+components, pela ordem certa (não inclui game-ui.css)
+  index.css          — importa tokens+base+components, pela ordem certa (não inclui patterns.css nem game-ui.css)
 docs/
   game-layout.md     — anatomia do ecrã de jogo em desktop e conversão para telemóvel
 tools/
   layout-check.js    — mede o layout de um jogo em vários tamanhos (Chrome headless, sem dependências)
 skin-builder/
   index.html         — gerador visual de skins (escolhe paleta + Google Fonts, exporta tokens.css)
+index.html, game-ui.html — site de documentação, com o HTML real de cada exemplo
+site/                — estilos e script só da página de documentação (não fazem parte do pacote)
 ```
 
 ## Jogos integrados
+
+Os repositórios de jogo abaixo estão arquivados: os jogos vivem agora dentro da plataforma Bitnik, que usa uma cópia fixa deste design system (por tag).
 
 - [Bulbous](https://github.com/dferreiramarques/bulbous) — cores próprias (tema escuro, acento lilás `#c084fc`, 4 cores de peça vermelho/azul/verde/amarelo), tipografia/raio/sombra do design system partilhado.
 - [Capivaras](https://github.com/dferreiramarques/capivaras) — cores próprias (tema claro e quente, âmbar `#c47c28` + teal `#5bbfb6`), tipografia/raio/sombra do design system partilhado. Primeiro jogo a usar `--shadow-color-rgb` corretamente (sombra tingida ao `--ink` claro da skin, em vez de preto fixo).
